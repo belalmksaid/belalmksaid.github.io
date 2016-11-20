@@ -48,3 +48,17 @@ body {
     background-color: rgb(116, 27, 71);
 }
 
+#intro {
+	font-size: 70px;
+	color: rgb(116, 27, 71);
+	text-align: center;
+}
+
+#profile {
+	display: block;
+	border-radius: 50%;
+	height: 320px;
+	width: 320px;
+	margin-left: auto;
+    margin-right: auto;
+}

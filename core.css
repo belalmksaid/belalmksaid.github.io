@@ -52,12 +52,14 @@ body {
 	font-size: 70px;
 	color: rgb(116, 27, 71);
 	text-align: center;
+	font-weight: 100;
 }
 
 #blurb {
 	font-size: 35px;
 	color: black;
 	text-align: center;
+	font-weight: 100;
 }
 
 #profile {
@@ -67,4 +69,14 @@ body {
 	width: 320px;
 	margin-left: auto;
     margin-right: auto;
+}
+
+#smedia img {
+	width: 36px;
+	height: 36px;
+}
+
+#smedia{
+	margin: 0 auto;
+	width: 160px;
 }

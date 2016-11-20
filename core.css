@@ -28,7 +28,6 @@ body {
     font-size: 20px;
     border-style: solid;
 	border: none;
-	margin-bottom: 3px;
 }
 
 /* Change the link color to #111 (black) on hover */
@@ -36,13 +35,13 @@ body {
 #barmenu li a:hover:not(.active) {
 	border-style: solid;
 	border: none;
-	margin-bottom: 0px;
     border-bottom: solid 3px rgb(116, 27, 71);
 }
 
 #barmenu .active {
     background-color: rgb(116, 27, 71);
     color: white;
+    border-bottom: solid 3px rgb(116, 27, 71);
 }
 #barmenu .active:hover {
     background-color: rgb(116, 27, 71);

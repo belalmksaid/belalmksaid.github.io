@@ -54,6 +54,12 @@ body {
 	text-align: center;
 }
 
+#blurb {
+	font-size: 35px;
+	color: black;
+	text-align: center;
+}
+
 #profile {
 	display: block;
 	border-radius: 50%;

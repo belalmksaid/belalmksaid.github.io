@@ -2,6 +2,7 @@ html * {
 	margin: 0px; 
 	padding: 0px;
 	font-family: "Calibri";
+	font-weight: 100;
 }
 
 body {
@@ -51,14 +52,13 @@ body {
 	font-size: 70px;
 	color: rgb(116, 27, 71);
 	text-align: center;
-	font-weight: 100;
+
 }
 
 #blurb {
 	font-size: 35px;
 	color: black;
 	text-align: center;
-	font-weight: 100;
 }
 
 #profile {
@@ -90,4 +90,9 @@ body {
 #pcontainer h2 > a {
 	color: rgb(116, 27, 71);
 	font-weight: 400;
+	text-decoration: none;
+}
+
+#pcontainer h2 > a:hover {
+	text-decoration: underline;
 }

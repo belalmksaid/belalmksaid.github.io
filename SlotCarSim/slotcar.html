@@ -45,8 +45,7 @@
 		var track;
 		$.get("track.txt", function(data) {
       		track = data.split('|');
-  		});
-  		track = cleanArray(track);
+      		track = cleanArray(track);
   		var x = new Array(), y = new Array(), temp;
   		n = track.length;
   		console.log(n);
@@ -55,6 +54,8 @@
   			x[i] = parseFloat(temp[0]);
   			y[i] = parseFloat(temp[1]);
   		}
+  		});
+
 		</script>
 	</head>
 	<body>

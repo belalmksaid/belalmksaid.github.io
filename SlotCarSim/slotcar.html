@@ -4,13 +4,25 @@
 		<script type="text/javascript" src="jquery.js"></script>
 		<script>
 		function renderCircle(c, p, r) {
-	c.beginPath();
-    c.arc(p.x, p.y, r, 0, 2 * Math.PI);
-    c.closePath();
-    c.strokeStyle = '#000000';
-    c.stroke();
-}
-
+			c.beginPath();
+    		c.arc(p.x, p.y, r, 0, 2 * Math.PI);
+    		c.closePath();
+    		c.strokeStyle = '#000000';
+    		c.stroke();
+		}
+		function renderRectangle(c, p, w, h, o) {
+			var mw = w / 2.0;
+			var mh = h / 2.0;
+			c.save();
+			c.translate(p.x, p.y);
+			c.rotate(o);
+			c.translate(-p.x, -p.y);
+    		c.rect(p.x - mw, p.y - mh, w, h);
+    		c.lineWidth = 0.5;
+    		c.strokeStyle = '#000000';
+    		c.stroke();
+    		c.restore();
+		}
 		function car(p) {
 			this.position = p;
 			this.angle = 0;
@@ -19,7 +31,8 @@
 				this.position = h;
 			}
 			this.draw = function(c) {
-				renderCircle(c, this.position, 5);
+				//renderCircle(c, this.position, 5);
+				renderRectangle(c, this.position, 12, 20, this.angle);
 			}
 		}
 		function drawTrack(x, y, c) {

@@ -9,11 +9,19 @@ body {
 	background-image: url("background.png");
 }
 
+#truebody {
+	margin-top: 60px;
+}
+
 #barmenu {
     list-style-type: none;
     margin: 0;
     padding: 0;
+    top: 0;
     overflow: hidden;
+    position: fixed;
+    border-bottom: #a6a9ad 0.5px solid;
+    width: 100%;
 }
 
 #barmenu li {

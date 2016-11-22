@@ -49,7 +49,6 @@
       		track = cleanArray(track);
   		
   		n = track.length;
-  		console.log(n);
   		for(var i = 0; i < n; i++) {
   			temp = track[i].split(",");
   			x[i] = parseFloat(temp[0]);
@@ -89,7 +88,6 @@
 					target = cart.position.add(target);
 					cart.move(target);
 				}
-				
 				if(t == (n - 1)) t = 0;
 				cart.draw(c);
 			}, 0)

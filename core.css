@@ -80,13 +80,14 @@ body {
 	width: 160px;
 }
 
-h2 {
-	color: rgb(116, 27, 71);
-	font-weight: 400;
-}
 
 #pcontainer {
 	width: 90%;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+#pcontainer h2 > a {
+	color: rgb(116, 27, 71);
+	font-weight: 400;
 }

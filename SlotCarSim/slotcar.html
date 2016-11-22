@@ -1,0 +1,95 @@
+<html>
+	<head>
+		<script type="text/javascript" src="c:\users\belal\documents\github\disquemathjs\disquemath.js"></script>
+		<script type="text/javascript" src="jquery.js"></script>
+		<script>
+		function renderCircle(c, p, r) {
+	c.beginPath();
+    c.arc(p.x, p.y, r, 0, 2 * Math.PI);
+    c.closePath();
+    c.strokeStyle = '#000000';
+    c.stroke();
+}
+
+		function car(p) {
+			this.position = p;
+			this.angle = 0;
+			this.move = function(h) {
+				this.angle = Math.atan2(h.y - this.position.y, h.x - this.position.x);
+				this.position = h;
+			}
+			this.draw = function(c) {
+				renderCircle(c, this.position, 5);
+			}
+		}
+		function drawTrack(x, y, c) {
+			n = x.length;
+			for(var i = 1; i < n; i++) {
+				c.beginPath();
+      			c.moveTo((x[i - 1] ) * d + w / 2.0, (y[i - 1]) * d + h / 2.0);
+      			c.lineTo((x[i]) * d + w / 2.0, (y[i]) * d + h / 2.0);
+      			c.lineWidth = 1;
+      			c.strokeStyle = '#ff0000';
+      			c.stroke();
+			}
+		}
+		function cleanArray(actual) {
+  var newArray = new Array();
+  for (var i = 0; i < actual.length; i++) {
+    if (actual[i]) {
+      newArray.push(actual[i]);
+    }
+  }
+  return newArray;
+}
+		var track;
+		$.get("track.txt", function(data) {
+      		track = data.split('|');
+  		});
+  		track = cleanArray(track.split('|'));
+  		var x = new Array(), y = new Array(), temp;
+  		n = track.length;
+  		for(var i = 0; i < n; i++) {
+  			temp = track[i].split(",");
+  			x[i] = parseFloat(temp[0]);
+  			y[i] = parseFloat(temp[1]);
+  		}
+		</script>
+	</head>
+	<body>
+		<canvas id="board" height="600" width="800"></canvas>
+		<script type="text/javascript">
+			c = board.getContext('2d');
+			w = board.width;
+			h = board.height;
+			d = 150.0;
+			var vel = 5;
+			drawTrack(x, y, c);
+
+			var cart = new car(v(x[0] * d + w / 2.0, y[0] * d + h / 2.0));
+			cart.draw(c);
+
+			var t = 1;
+			setInterval(function() {
+				c.clearRect(0, 0, board.width, board.height);
+				drawTrack(x, y, c);
+				var target = (v(x[t] * d + w / 2.0, y[t] * d + h / 2.0)).subt(cart.position);
+				target.normalize();
+				var tt = t == 0 ? n - 1 : t - 1;
+				var alt = (v(x[t] * d + w / 2.0, y[t] * d + h / 2.0)).subt(v(x[tt] * d + w / 2.0, y[tt] * d + h / 2.0));
+				var dot = (target.x * alt.x + target.y * alt.y) / (target.length() * alt.length());
+				var angle = Math.acos(dot) * 180 / (Math.PI);
+				if(angle >= 15 || isNaN(angle)) 
+					t++;
+				else {
+					target = target.scale(vel);
+					target = cart.position.add(target);
+					cart.move(target);
+				}
+				
+				if(t == (n - 1)) t = 0;
+				cart.draw(c);
+			}, 1)
+		</script>
+	</body>
+</html>

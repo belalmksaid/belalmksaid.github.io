@@ -46,7 +46,7 @@
 		$.get("track.txt", function(data) {
       		track = data.split('|');
   		});
-  		track = cleanArray(track.split('|'));
+  		track = cleanArray(track);
   		var x = new Array(), y = new Array(), temp;
   		n = track.length;
   		for(var i = 0; i < n; i++) {

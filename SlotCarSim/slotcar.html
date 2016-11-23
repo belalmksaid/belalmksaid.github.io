@@ -3,10 +3,16 @@
 		<script type="text/javascript" src="disquemath.js"></script>
 		<script type="text/javascript" src="jquery.js"></script>
 		<script>
-		function getQ(q,s) {
-    s = (s) ? s : window.location.search;
-    var re = new RegExp('&amp;'+q+'=([^&amp;]*)','i');
-    return (s=s.replace(/^\?/,'&amp;').match(re)) ?s=s[1] :s='';
+		function getParameterByName(name, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 		function renderCircle(c, p, r) {
 			c.beginPath();
@@ -62,7 +68,7 @@
 }
 		var track;
 		var x = new Array(), y = new Array(), temp;
-		var file = getQ("t");
+		var file = getParameterByName("t");
 		$.get(file, function(data) {
       		track = data.split('|');
       		track = cleanArray(track);
@@ -106,10 +112,10 @@
 				radc.y = -temp;
 				var midpt = (v(x[t] * d + w / 2.0, y[t] * d + h / 2.0)).add(v(x[tt] * d + w / 2.0, y[tt] * d + h / 2.0)).scale(0.5);
 				var endpt = midpt.add(radc.scale(15));
-				ctx.beginPath();
-				ctx.moveTo(midpt.x,midpt.y);
-				ctx.lineTo(endpt.x,endpt.y);
-				ctx.stroke();
+				c.beginPath();
+				c.moveTo(midpt.x,midpt.y);
+				c.lineTo(endpt.x,endpt.y);
+				c.stroke();
 				var dot = (target.x * alt.x + target.y * alt.y) / (target.length() * alt.length());
 				var angle = Math.acos(dot) * 180 / (Math.PI);
 				if(angle >= 15 || isNaN(angle)) 

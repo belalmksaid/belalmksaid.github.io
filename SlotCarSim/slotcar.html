@@ -191,7 +191,11 @@
 					target = cart.position.add(target);
 					cart.move(target);
 				}
-				if(t == (n - 1)) t = 0;
+				if(t == (n - 1)) {
+					cart.position = v(x[0] * d + w / 2.0, y[0] * d + h / 2.0);
+					cart.angle = 0;
+					t = 0;
+				}
 				t_position.value = t / (x.length) * 100;
 				cart.draw(c);
 			}, 0);

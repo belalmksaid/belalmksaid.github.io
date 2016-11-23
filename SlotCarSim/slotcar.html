@@ -50,12 +50,14 @@
 		function drawTrack(x, y, c) {
 			n = x.length;
 			for(var i = 1; i < n; i++) {
+				c.save();
 				c.beginPath();
       			c.moveTo((x[i - 1] ) * d + w / 2.0, (y[i - 1]) * d + h / 2.0);
       			c.lineTo((x[i]) * d + w / 2.0, (y[i]) * d + h / 2.0);
       			c.lineWidth = 1;
       			c.strokeStyle = '#ff0000';
       			c.stroke();
+      			c.restore();
 			}
 		}
 		function cleanArray(actual) {
@@ -114,10 +116,13 @@
 				radc.y = -temp;
 				var midpt = (v(x[t] * d + w / 2.0, y[t] * d + h / 2.0)).add(v(x[tt] * d + w / 2.0, y[tt] * d + h / 2.0)).scale(0.5);
 				var endpt = midpt.add(radc.scale(15));
+				c.save();
 				c.beginPath();
+				c.setLineDash([1, 1]);
 				c.moveTo(midpt.x,midpt.y);
 				c.lineTo(endpt.x,endpt.y);
 				c.stroke();
+				c.restore();
 				var dot = (target.x * alt.x + target.y * alt.y) / (target.length() * alt.length());
 				var angle = Math.acos(dot) * 180 / (Math.PI);
 				if(angle >= 15 || isNaN(angle)) 

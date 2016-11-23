@@ -112,8 +112,10 @@
 				var ttt = tt == 0? n - 1 : tt - 1;
 				var tk1 = t == (n - 1) ? 0 : t + 1;
 				var tm1 = v(x[tt] * d + w / 2.0, y[tt] * d + h / 2.0);
-				var tm2 = v(x[ttt] * d + w / 2.0, y[ttt] * d + h / 2.0);
 				var tp1 = v(x[tk1] * d + w / 2.0, y[tk1] * d + h / 2.0);
+				var s1 = (tpoint.y - tm1.y) / (tpoint.x - tm1.x);
+				var s2 = (tp1.y - tpoint.y) / (p1.x - tpoint.x);
+				var ss = (s2 - s2) / ((p1.x - tm1.x) / 2.0);
 				var alt = (tpoint).subt(tm1);
 				var radc = alt.clone().normalize();
 				var temp = radc.x;

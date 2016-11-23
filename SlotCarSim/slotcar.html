@@ -101,12 +101,14 @@
 				var pos;
 				var alt = (v(x[t] * d + w / 2.0, y[t] * d + h / 2.0)).subt(v(x[tt] * d + w / 2.0, y[tt] * d + h / 2.0));
 				var radc = alt.clone().normalize();
-				var temp = radx.x;
+				var temp = radc.x;
 				radc.x = radc.y;
 				radc.y = -temp;
+				var midpt = (v(x[t] * d + w / 2.0, y[t] * d + h / 2.0)).add(v(x[tt] * d + w / 2.0, y[tt] * d + h / 2.0)).scale(0.5);
+				var endpt = midpt.add(radc.scale(15));
 				ctx.beginPath();
-				ctx.moveTo(0,0);
-				ctx.lineTo(300,150);
+				ctx.moveTo(midpt.x,midpt.y);
+				ctx.lineTo(endpt.x,endpt.y);
 				ctx.stroke();
 				var dot = (target.x * alt.x + target.y * alt.y) / (target.length() * alt.length());
 				var angle = Math.acos(dot) * 180 / (Math.PI);

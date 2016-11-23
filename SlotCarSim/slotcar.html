@@ -112,10 +112,10 @@
 				radc.y = -temp;
 				var midpt = (v(x[t] * d + w / 2.0, y[t] * d + h / 2.0)).add(v(x[tt] * d + w / 2.0, y[tt] * d + h / 2.0)).scale(0.5);
 				var endpt = midpt.add(radc.scale(15));
-				c.beginPath();
+				/*c.beginPath();
 				c.moveTo(midpt.x,midpt.y);
 				c.lineTo(endpt.x,endpt.y);
-				c.stroke();
+				c.stroke();*/
 				var dot = (target.x * alt.x + target.y * alt.y) / (target.length() * alt.length());
 				var angle = Math.acos(dot) * 180 / (Math.PI);
 				if(angle >= 15 || isNaN(angle)) 

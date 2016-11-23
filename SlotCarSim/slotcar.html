@@ -167,7 +167,7 @@
 				radc.y = -temp;
 				var midpt = (cart.position).add(tm1).scale(0.5);
 				var endpt = midpt.add(radc.scale(Math.abs(radiusCurv * sign(radiusCurv)) * sign(ss) * sign(-1 * y[t])));
-				var norm = midpt.add(radc.scale(30 * sign(ss) * sign(y[t])));
+				var norm = midpt.add(radc.scale(Math.pow(vel, 2) / radiusCurv * sign(ss) * sign(y[t])));
 				c.save();
 				c.beginPath();
 				c.setLineDash([1, 2]);

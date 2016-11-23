@@ -120,6 +120,7 @@
 	</head>
 	<body>
 		<canvas id="board" height="600" width="800"></canvas>
+		<input type="range" id="t_position" value="0" style="width: 800" />
 		<script type="text/javascript">
 			c = board.getContext('2d');
 			w = board.width;
@@ -191,6 +192,7 @@
 					cart.move(target);
 				}
 				if(t == (n - 1)) t = 0;
+				t_position.value = t / (x.length) * 100;
 				cart.draw(c);
 			}, 0);
 			});

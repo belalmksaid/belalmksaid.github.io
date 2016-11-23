@@ -105,16 +105,21 @@
 				setInterval(function() {
 				c.clearRect(0, 0, board.width, board.height);
 				drawTrack(x, y, c);
-				var target = (v(x[t] * d + w / 2.0, y[t] * d + h / 2.0)).subt(cart.position);
+				var tpoint = v(x[t] * d + w / 2.0, y[t] * d + h / 2.0);
+				var target = (tpoint).subt(cart.position);
 				target.normalize();
 				var tt = t == 0 ? n - 1 : t - 1;
-				//var pos;
-				var alt = (v(x[t] * d + w / 2.0, y[t] * d + h / 2.0)).subt(v(x[tt] * d + w / 2.0, y[tt] * d + h / 2.0));
+				var ttt = tt == 0? n - 1 : tt - 1;
+				var tk1 = t == (n - 1) ? 0 : t + 1;
+				var tm1 = v(x[tt] * d + w / 2.0, y[tt] * d + h / 2.0);
+				var tm2 = v(x[ttt] * d + w / 2.0, y[ttt] * d + h / 2.0);
+				var tp1 = v(x[tk1] * d + w / 2.0, y[tk1] * d + h / 2.0);
+				var alt = (tpoint).subt(tm1);
 				var radc = alt.clone().normalize();
 				var temp = radc.x;
 				radc.x = radc.y;
 				radc.y = -temp;
-				var midpt = (v(x[t] * d + w / 2.0, y[t] * d + h / 2.0)).add(v(x[tt] * d + w / 2.0, y[tt] * d + h / 2.0)).scale(0.5);
+				var midpt = (tpoint).add(tm1).scale(0.5);
 				var endpt = midpt.add(radc.scale(60));
 				var norm = midpt.add(radc.scale(-30));
 				c.save();

@@ -8,16 +8,16 @@
 			return Math.sign(n);
 		}
 		function getParameterByName(name, url) {
-    if (!url) {
-      url = window.location.href;
-    }
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
+    		if (!url) {
+     			url = window.location.href;
+    		}
+    		name = name.replace(/[\[\]]/g, "\\$&");
+    		var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+       		results = regex.exec(url);
+    		if (!results) return null;
+    		if (!results[2]) return '';
+    		return decodeURIComponent(results[2].replace(/\+/g, " "));
+		}
 		function renderCircle(c, p, r) {
 			c.beginPath();
     		c.arc(p.x, p.y, r, 0, 2 * Math.PI);
@@ -64,14 +64,52 @@
 			}
 		}
 		function cleanArray(actual) {
-  var newArray = new Array();
-  for (var i = 0; i < actual.length; i++) {
-    if (actual[i]) {
-      newArray.push(actual[i]);
-    }
-  }
-  return newArray;
-}
+  			var newArray = new Array();
+  			for (var i = 0; i < actual.length; i++) {
+    		if (actual[i]) {
+      			newArray.push(actual[i]);
+    		}
+  		}		
+ 		return newArray;
+		}
+		function drawLegend(c) {
+			c.font = "15px Calibri"
+  			c.save();
+    		c.rect(20, 500, 160, 100);
+    		c.lineWidth = 2;
+    		c.strokeStyle = '#000000';
+    		c.stroke();
+  			c.restore();
+  			renderRectangle(c, v(40, 515), 30, 18, 0);
+  			c.fillText('Car', 80, 520);
+  			c.fillText('Normal Force', 80, 589);
+  			c.save();
+			c.beginPath();
+			c.setLineDash([1, 2]);
+			c.moveTo(24, 543);
+			c.lineTo(56, 543);
+			c.fillText('Radius', 80, 547);
+			c.stroke();
+			c.restore();
+			c.save();
+			c.beginPath();
+      		c.moveTo(24, 563);
+			c.lineTo(56, 563);
+			c.fillText('Track', 80, 569);
+      		c.lineWidth = 1;
+      		c.strokeStyle = '#ff0000';
+      		c.stroke();
+      		c.restore();
+      		c.save();
+			c.beginPath();
+      		c.moveTo(24, 584);
+			c.lineTo(56, 584);
+      		c.lineWidth = 1;
+      		c.strokeStyle = '#0000ff';
+      		c.stroke();
+      		c.restore();
+
+  		}
 		var track;
 		var x = new Array(), y = new Array(), temp;
 		var file = getParameterByName("t");
@@ -87,6 +125,7 @@
 			w = board.width;
 			h = board.height;
 			d = 150.0;
+			drawLegend(c);
 			var vel = 0.5;
 			$.get(file, function(data) {
       		track = data.split('|');
@@ -106,6 +145,7 @@
 				setInterval(function() {
 				c.clearRect(0, 0, board.width, board.height);
 				drawTrack(x, y, c);
+				drawLegend(c);
 				var tpoint = v(x[t] * d + w / 2.0, y[t] * d + h / 2.0);
 				var target = (tpoint).subt(cart.position);
 				target.normalize();

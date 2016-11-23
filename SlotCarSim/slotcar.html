@@ -125,7 +125,7 @@
 				radc.x = radc.y;
 				radc.y = -temp;
 				var midpt = (tpoint).add(tm1).scale(0.5);
-				var endpt = midpt.add(radc.scale(60 * sign(ss)));
+				var endpt = midpt.add(radc.scale(60 * sign(ss) * sign(y[t])));
 				var norm = midpt.add(radc.scale(-30));
 				c.save();
 				c.beginPath();

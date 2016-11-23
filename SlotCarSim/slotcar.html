@@ -73,7 +73,7 @@
 		$.get(file, function(data) {
       		track = data.split('|');
       		track = cleanArray(track);
-  		
+      		console.log(data);
   		n = track.length;
   		for(var i = 0; i < n; i++) {
   			temp = track[i].split(",");

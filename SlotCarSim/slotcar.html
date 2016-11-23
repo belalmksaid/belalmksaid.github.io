@@ -70,16 +70,17 @@
 		var track;
 		var x = new Array(), y = new Array(), temp;
 		var file = getParameterByName("t");
+		var loaded = false;
 		$.get(file, function(data) {
       		track = data.split('|');
-      		track = cleanArray(track);
-      		console.log(data);
+      		track = cleanArray(track);	
   		n = track.length;
   		for(var i = 0; i < n; i++) {
   			temp = track[i].split(",");
   			x[i] = parseFloat(temp[0]);
   			y[i] = parseFloat(temp[1]);
   		}
+  		loaded = true;
   		});
 
 		</script>
@@ -92,16 +93,15 @@
 			h = board.height;
 			d = 150.0;
 			var vel = 2;
+			while(!loaded) {console.log("Not loaded.")};
 			$(document).ready(function() {
 				drawTrack(x, y, c);
-
-			var cart = new car(v(x[0] * d + w / 2.0, y[0] * d + h / 2.0));
-			console.log(v(x[0] * d + w / 2.0, y[0] * d + h / 2.0));
-			console.log(x);
-			cart.draw(c);
-
-			var t = 1;
-			setInterval(function() {
+				var cart = new car(v(x[0] * d + w / 2.0, y[0] * d + h / 2.0));
+				console.log(v(x[0] * d + w / 2.0, y[0] * d + h / 2.0));
+				console.log(x);
+				cart.draw(c);
+				var t = 1;
+				setInterval(function() {
 				c.clearRect(0, 0, board.width, board.height);
 				drawTrack(x, y, c);
 				var target = (v(x[t] * d + w / 2.0, y[t] * d + h / 2.0)).subt(cart.position);

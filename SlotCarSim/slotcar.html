@@ -3,6 +3,11 @@
 		<script type="text/javascript" src="disquemath.js"></script>
 		<script type="text/javascript" src="jquery.js"></script>
 		<script>
+		function getQ(q,s) {
+    s = (s) ? s : window.location.search;
+    var re = new RegExp('&amp;'+q+'=([^&amp;]*)','i');
+    return (s=s.replace(/^\?/,'&amp;').match(re)) ?s=s[1] :s='';
+}
 		function renderCircle(c, p, r) {
 			c.beginPath();
     		c.arc(p.x, p.y, r, 0, 2 * Math.PI);
@@ -57,7 +62,8 @@
 }
 		var track;
 		var x = new Array(), y = new Array(), temp;
-		$.get("track.txt", function(data) {
+		var file = getQ("t");
+		$.get(file, function(data) {
       		track = data.split('|');
       		track = cleanArray(track);
   		

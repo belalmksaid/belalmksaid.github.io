@@ -115,10 +115,10 @@
 				radc.x = radc.y;
 				radc.y = -temp;
 				var midpt = (v(x[t] * d + w / 2.0, y[t] * d + h / 2.0)).add(v(x[tt] * d + w / 2.0, y[tt] * d + h / 2.0)).scale(0.5);
-				var endpt = midpt.add(radc.scale(30));
+				var endpt = midpt.add(radc.scale(60));
 				c.save();
 				c.beginPath();
-				c.setLineDash([1, 1]);
+				c.setLineDash([1, 2]);
 				c.moveTo(midpt.x,midpt.y);
 				c.lineTo(endpt.x,endpt.y);
 				c.stroke();

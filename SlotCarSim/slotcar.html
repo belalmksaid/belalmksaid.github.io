@@ -3,6 +3,10 @@
 		<script type="text/javascript" src="disquemath.js"></script>
 		<script type="text/javascript" src="jquery.js"></script>
 		<script>
+		function sign(n) {
+			if(isNaN(n)) return 0;
+			return Math.sign(n);
+		}
 		function getParameterByName(name, url) {
     if (!url) {
       url = window.location.href;
@@ -112,6 +116,8 @@
 				var s1 = (tpoint.y - tm1.y) / (tpoint.x - tm1.x);
 				var s2 = (tp1.y - tpoint.y) / (tp1.x - tpoint.x);
 				var ss = (s2 - s1) / ((tp1.x - tm1.x) / 2.0);
+				//var s1 = v((tpoint.x - tm1.x), (tpoint.y - tm1.y));
+				//var s2 = v((tp1.x - tpoint.x), (tp1.y - tpoint.y));
 				console.log(ss);
 				var alt = (tpoint).subt(tm1);
 				var radc = alt.clone().normalize();
@@ -119,7 +125,7 @@
 				radc.x = radc.y;
 				radc.y = -temp;
 				var midpt = (tpoint).add(tm1).scale(0.5);
-				var endpt = midpt.add(radc.scale(60));
+				var endpt = midpt.add(radc.scale(60 * sign(ss)));
 				var norm = midpt.add(radc.scale(-30));
 				c.save();
 				c.beginPath();

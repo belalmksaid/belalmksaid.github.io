@@ -105,7 +105,13 @@ body {
 	text-decoration: underline;
 }
 
+#projectdisplay {
+	text-align: center;
+}
+
 #projectdisplay > img {
 	height: 150px;
 	display: inline-block;
+	padding-left: 30px;
+	padding-right: 30px;
 }

@@ -234,7 +234,7 @@
 				t_position.value = t / (x.length) * 100;
 				var nforce = Math.pow(vel, 2) / radiusCurv;
 				vel_label.innerText = vel_label.getAttribute("label") + " " + vel + " " + vel_label.getAttribute("unit");
-				norm_label.innerText = norm_label.getAttribute("label") + " " + nforce + " " + norm_label.getAttribute("unit");
+				norm_label.innerText = norm_label.getAttribute("label") + " " + nforce,toFixed(5) + " " + norm_label.getAttribute("unit");
 				mass_label.innerText = mass_label.getAttribute("label") + " " + mass + " " + mass_label.getAttribute("unit");
 				cart.draw(c);
 			}, 0);

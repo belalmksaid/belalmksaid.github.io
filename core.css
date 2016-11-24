@@ -104,3 +104,8 @@ body {
 #pcontainer h2 > a:hover {
 	text-decoration: underline;
 }
+
+#projectdisplay > img {
+	height: 150px;
+	display: inline-block;
+}

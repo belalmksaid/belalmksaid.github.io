@@ -61,16 +61,16 @@
 		}
 		function drawTrack(x, y, c) {
 			n = x.length;
+			c.save();
 			for(var i = 1; i < n; i++) {
-				c.save();
 				c.beginPath();
       			c.moveTo((x[i - 1] ) * d + w / 2.0, (y[i - 1]) * d + h / 2.0);
       			c.lineTo((x[i]) * d + w / 2.0, (y[i]) * d + h / 2.0);
       			c.lineWidth = 1;
       			c.strokeStyle = '#ff0000';
       			c.stroke();
-      			c.restore();
 			}
+			c.restore();
 		}
 		function cleanArray(actual) {
   			var newArray = new Array();
@@ -123,8 +123,6 @@
 		var x = new Array(), y = new Array(), temp;
 		var file = getParameterByName("t");
 		var loaded = false;
-		
-
 		</script>
 	</head>
 	<body>
@@ -141,6 +139,10 @@
         </fieldset>
         <br/>
               <p id="vel_label" label="Velocity:" unit="m/s">Velocity: 0 m/s</p>
+              <br/>
+              <p id="norm_label" label="Normal Force:" unit="N">Normal Force: 0 N</p>
+              <br/>
+              <p id="mass_label" label="Mass" unit="kg">Mass: 0 kg</p>
 			</div>
 			
 			</td>
@@ -154,6 +156,7 @@
 			w = board.width;
 			h = board.height;
 			d = 150.0;
+			mass = 1;
 			drawLegend(c);
 			var vel = 0.5;
 			$.get(file, function(data) {
@@ -229,7 +232,10 @@
 					t = 0;
 				}
 				t_position.value = t / (x.length) * 100;
-				vel_label.text = vel_label.getAttribute("label") + " " + vel + " " + vel_label.getAttribute("unit");
+				var nforce = Math.pow(vel, 2) / radiusCurv;
+				vel_label.innerText = vel_label.getAttribute("label") + " " + vel + " " + vel_label.getAttribute("unit");
+				norm_label.innerText = norm_label.getAttribute("label") + " " + nforce + " " + norm_label.getAttribute("unit");
+				mass_label.innerText = mass_label.getAttribute("label") + " " + mass + " " + mass_label.getAttribute("unit");
 				cart.draw(c);
 			}, 0);
 			});

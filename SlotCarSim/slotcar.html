@@ -1,6 +1,14 @@
 <html>
 	<head>
-		<style type="text/css" href="/core.css"></style>
+		<style type="text/css">
+			html * {
+	margin: 0px; 
+	padding: 0px;
+	font-family: "Calibri";
+	font-weight: 100;
+}
+
+		</style>
 		<script type="text/javascript" src="disquemath.js"></script>
 		<script type="text/javascript" src="jquery.js"></script>
 		<script>
@@ -125,8 +133,18 @@
 			<td><canvas id="board" height="600" width="800"></canvas></td>
 			<td>
 			<div style="height: 600px; width: 200px;">
-			<p>Velocity:</p>	
-			</div></td>
+
+			<fieldset>
+                <legend>Display Options</legend>
+                        <input type="checkbox" id="showradius" checked="true" />Show Radius<br />
+                        <input type="checkbox" id="shownforce" checked="true" />Show Normal Force<br />
+        </fieldset>
+        <br/>
+              <p id="vel_label" label="Velocity:" unit="m/s">Velocity: 0 m/s</p>
+			</div>
+			
+			</td>
+
 		</tr>
 	</table>
 		
@@ -178,20 +196,24 @@
 				var midpt = (cart.position).add(tm1).scale(0.5);
 				var endpt = midpt.add(radc.scale(Math.abs(radiusCurv * sign(radiusCurv)) * sign(ss) * sign(-1 * y[t])));
 				var norm = midpt.add(radc.scale(3000 * Math.pow(vel, 2) / radiusCurv * sign(ss) * sign(y[t])));
-				c.save();
-				c.beginPath();
-				c.setLineDash([1, 2]);
-				c.moveTo(midpt.x,midpt.y);
-				c.lineTo(endpt.x,endpt.y);
-				c.stroke();
-				c.restore();
-				c.save();
-				c.beginPath();
-    			c.strokeStyle = '#0000FF';
-				c.moveTo(midpt.x,midpt.y);
-				c.lineTo(norm.x,norm.y);
-				c.stroke();
-				c.restore();
+				if(showradius.checked) {
+					c.save();
+					c.beginPath();
+					c.setLineDash([1, 2]);
+					c.moveTo(midpt.x,midpt.y);
+					c.lineTo(endpt.x,endpt.y);
+					c.stroke();
+					c.restore();
+				}
+				if(shownforce.checked) {
+					c.save();
+					c.beginPath();
+    				c.strokeStyle = '#0000FF';
+					c.moveTo(midpt.x,midpt.y);
+					c.lineTo(norm.x,norm.y);
+					c.stroke();
+					c.restore();
+				}
 				var dot = (target.x * alt.x + target.y * alt.y) / (target.length() * alt.length());
 				var angle = Math.acos(dot) * 180 / (Math.PI);
 				if(angle >= 15 || isNaN(angle)) 

@@ -4,12 +4,12 @@ xi = (2 + cos(3.*t)).*cos(t);
 yi = (2 + cos(3.*t)).*sin(t);
 xi = xi - ((max(xi) + min(xi))/2.0);
 yi = yi - ((max(yi) + min(yi))/2.0);
-xi = xi ./ max(xi);
-yi = yi ./ max(yi);
+x = xi ./ max(xi);
+y = yi ./ max(yi);
 
-plot(xi, yi, '.');
+plot(x, y, '.');
 axis equal
 
 fileID = fopen('track3.txt','w');
-fprintf(fileID, '%f,%f|', [xi yi]');
+fprintf(fileID, '%f,%f|', [x y]');
 fclose(fileID);

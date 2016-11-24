@@ -173,7 +173,7 @@
 				var t = 1;
 				setInterval(function() {
 				c.clearRect(0, 0, board.width, board.height);
-				drawTrack(x, y, c);
+				//drawTrack(x, y, c);
 				drawLegend(c);
 				var tpoint = v(x[t] * d + w / 2.0, y[t] * d + h / 2.0);
 				var target = (tpoint).subt(cart.position);
@@ -229,6 +229,7 @@
 					t = 0;
 				}
 				t_position.value = t / (x.length) * 100;
+				vel_label.text = vel_label.getAttribute("label") + " " + vel + " " + vel_label.getAttribute("unit");
 				cart.draw(c);
 			}, 0);
 			});

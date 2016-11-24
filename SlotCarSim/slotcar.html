@@ -136,13 +136,14 @@
                 <legend>Display Options</legend>
                         <input type="checkbox" id="showradius" checked="true" />Show Radius<br />
                         <input type="checkbox" id="shownforce" checked="true" />Show Normal Force<br />
+                        <input type="checkbox" id="freeze"/>Freeze<br />
         </fieldset>
         <br/>
               <p id="vel_label" label="Velocity:" unit="m/s">Velocity: 0 m/s</p>
               <br/>
               <p id="norm_label" label="Normal Force:" unit="N">Normal Force: 0 N</p>
               <br/>
-              <p id="mass_label" label="Mass" unit="kg">Mass: 0 kg</p>
+              <p id="mass_label" label="Mass:" unit="kg">Mass: 0 kg</p>
 			</div>
 			
 			</td>
@@ -175,6 +176,7 @@
 				cart.draw(c);
 				var t = 1;
 				setInterval(function() {
+					if(!freeze.checked) {
 				c.clearRect(0, 0, board.width, board.height);
 				drawTrack(x, y, c);
 				drawLegend(c);
@@ -237,7 +239,8 @@
 				norm_label.innerText = norm_label.getAttribute("label") + " " + (isNaN(nforce) ? 0 : nforce.toFixed(5)) + " " + norm_label.getAttribute("unit");
 				mass_label.innerText = mass_label.getAttribute("label") + " " + mass + " " + mass_label.getAttribute("unit");
 				cart.draw(c);
-			}, 0);
+			}
+		}, 0);
 			});
   		});			
 		</script>

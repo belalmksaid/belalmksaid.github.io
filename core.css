@@ -114,6 +114,10 @@ body {
 	text-align: center;
 }
 
+#pcontainer > h2 {
+	text-align: center;
+}
+
 #projectdisplay > img {
 	height: 150px;
 	display: inline-block;

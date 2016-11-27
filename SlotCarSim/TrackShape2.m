@@ -10,6 +10,6 @@ y = yi ./ max(yi);
 plot(x, y, '.');
 axis equal
 
-fileID = fopen('track3.txt','w');
+fileID = fopen('track4.txt','w');
 fprintf(fileID, '%f,%f|', [x y]');
 fclose(fileID);

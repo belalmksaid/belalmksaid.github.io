@@ -13,6 +13,10 @@ body {
 	background-image: url("background.png");
 }
 
+iframe {
+	border: none;
+}
+
 #truebody {
 	margin-top: 60px;
 }

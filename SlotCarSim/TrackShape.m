@@ -14,6 +14,7 @@ n = 400;
 [xi, yi, tk] = paramSpline(x, y, n);
 xi = xi - ((max(xi) + min(xi))/2.0);
 yi = yi - ((max(yi) + min(yi))/2.0);
+max(xi) * 2
 x = -1 * xi ./ max(xi);
 y = -1 * yi ./ max(xi);
 plot(x, y, '.');

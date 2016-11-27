@@ -15,7 +15,7 @@ n = 400;
 xi = xi - ((max(xi) + min(xi))/2.0);
 yi = yi - ((max(yi) + min(yi))/2.0);
 x = xi ./ max(xi);
-y = yi ./ max(xi);
+y = -1 * yi ./ max(xi);
 plot(x, y, '.');
 axis equal
 fileID = fopen('track4.txt','w');

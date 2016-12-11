@@ -1,7 +1,7 @@
  html * {
 	margin: 0px; 
 	padding: 0px;
-	font-family: "Calibri";
+	font-family: "Garamond";
 	font-weight: 100;
 }
 
@@ -137,5 +137,5 @@ iframe {
 	background: white;
 	margin-top: 14px;
 	margin-left: 40px;
-	font-size: 18px;
+	font-size: 19px;
 }

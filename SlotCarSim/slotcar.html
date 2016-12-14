@@ -160,7 +160,7 @@
 			d = 150.0;
 			mass = 1;
 			drawLegend(c);
-			var vel = 0.5;
+			var vel = 130.4;
 			$.get(file, function(data) {
       		track = data.split('|');
       		track = cleanArray(track);	
@@ -225,7 +225,7 @@
 				if(angle >= 15 || isNaN(angle)) 
 					t++;
 				else {
-					target = target.scale(vel);
+					target = target.scale(vel / 100.0);
 					target = cart.position.add(target);
 					cart.move(target);
 				}

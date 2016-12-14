@@ -201,7 +201,7 @@
 				radc.y = -temp;
 				var midpt = (cart.position).add(tm1).scale(0.5);
 				var endpt = midpt.add(radc.scale(Math.abs(radiusCurv * sign(radiusCurv)) * sign(ss) * sign(-1 * y[t])));
-				var norm = midpt.add(radc.scale(0.019 * 3000 * Math.pow(vel, 2) / radiusCurv * sign(ss) * sign(y[t])));
+				var norm = midpt.add(radc.scale(0.019 * 1000 * Math.pow(vel, 2) / radiusCurv * sign(ss) * sign(y[t])));
 				if(showradius.checked) {
 					c.save();
 					c.beginPath();

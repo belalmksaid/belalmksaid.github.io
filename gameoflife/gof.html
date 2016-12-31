@@ -217,7 +217,7 @@ var myLiveChart = new Chart(C).Line(startingData, {animationSteps: 15});
 			}
 			var a = hunters[Math.floor(random(0, hunters.length))];
 			a.brain.putWeights(array);
-			a.gene = new gene(a.brain.getWeights(), 100);
+			a.gene.weights = a.brain.getWeights();
 		}
 	</script>
 </body>

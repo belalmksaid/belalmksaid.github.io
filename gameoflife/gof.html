@@ -156,18 +156,8 @@ var myLiveChart = new Chart(C).Line(startingData, {animationSteps: 15});
 				}
 				avg /= hunters.length;
 				if(counter > limit && evo.checked) {
-					if(showgraph.checked) {
-						for(var i = 0; i < allfit.length; i++) {
-							myLiveChart.addData([allfit[i], allbst[i]], ++latestLabel);
-						}
-						allfit.length = 0;
-						bestFit.length = 0;
-					 	myLiveChart.addData([avg, bst], ++latestLabel);
-					}
-					else {
-						allfit.push(avg);
-						allbst.push(bst);
-					}
+					allfit.push(avg);
+					allbst.push(bst);
 					counter = 0;
 					pool.epoch(0.4);
 					foodpool.epoch(0.5);
@@ -184,8 +174,13 @@ var myLiveChart = new Chart(C).Line(startingData, {animationSteps: 15});
 						food[i].position.y = Disque.random(0, H);
 					}
 				}
-
-
+				if(showgraph.checked) {
+						for(var i = 0; i < allfit.length; i++) {
+							myLiveChart.addData([allfit[i], allbst[i]], ++latestLabel);
+						}
+						allfit.length = 0;
+						bestFit.length = 0;
+				}
 				gen.innerHTML = "Generation: " + pool.generation;
 				avgFit.innerHTML = "Average Fitness: " + avg;
 				bestFit.innerHTML = "Best Fitness: " + bst;

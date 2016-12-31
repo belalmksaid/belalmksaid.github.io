@@ -60,7 +60,7 @@ function Hunter() {
 MAXFOODSPEED = 2.5;
 function Food() {
 	this.position = v(Disque.random(0, W), Disque.random(0, H));
-	this.body = new circle(this.position, 5, new color(0,0,0));
+	this.body = new circle(this.position, 8, new color(0,0,0));
 	this.speed = Disque.random(-1, 1);
 	this.orient = Disque.random(0, Math.PI * 2.0);
 	this.brain = new NeuralNetwork();

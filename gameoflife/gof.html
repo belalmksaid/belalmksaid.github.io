@@ -1,0 +1,100 @@
+<html>
+<head>
+	<script type="text/javascript" src="disquemath.js"></script>	
+	<script type="text/javascript" src="neuralnetwork.js"></script>
+	<script type="text/javascript" src="game.js"></script>
+</head>
+<body>
+	<canvas id="gameboard" width="800" height="640"></canvas>
+	<script type="text/javascript">
+		C = gameboard.getContext('2d');
+		var pool = new GenePool();
+		var hunters = new Array();
+		var food = new Array();
+		for(var i = 0; i < 30; i++) {
+			var a = new Hunter();
+			hunters.push(a);
+			pool.genes.push(a.gene);
+		}
+		for(var i = 0; i < 20; i++) {
+			var a = new Food();
+			food.push(a);
+		}
+
+		function findClosest(a, b, list) {
+			for(var i = 0; i < b.length; i++) {
+				list.push(v(i, (a.position.x - b[i].position.x) * (a.position.x - b[i].position.x)  + (a.position.y - b[i].position.y) * (a.position.y - b[i].position.y)));
+			}
+			list.sort(function(a, b) { return a.y - b.y; });
+			return list[0].x;
+		}
+
+		function resolveCollision(a, b, max) {
+			for(var i = 0; i < max; i++) {
+				if((a.position.x - food[b[i].x].position.x) * (a.position.x - food[b[i].x].position.x)  + (a.position.y - food[b[i].x].position.y) * (a.position.y - food[b[i].x].position.y) < (a.body.radius + food[b[i].x].body.radius) * (a.body.radius + food[b[i].x].body.radius)) {
+					food[b[i].x].position.x = Disque.random(0, W);
+					food[b[i].x].position.y = Disque.random(0, H);
+					a.gene.fitness += 5;
+				}
+			}
+		}
+
+		var counter = 0;
+		var limit = 1000;
+		var allfit = new Array();
+		var avg = 0;
+		var bst = -100000;
+		var show = true;
+		var a = setInterval(function() {
+			C.clearRect(0, 0, W, H);
+			for(var i = 0; i < hunters.length; i++) {
+				var list = new Array();
+				var ch = findClosest(hunters[i], food, list);
+				resolveCollision(hunters[i], list, 2);
+				hunters[i].update(food[ch].position.x, food[ch].position.y);
+				if(i < food.length) {
+					var list = new Array();
+					var ch = findClosest(food[i], hunters, list);
+					food[i].update(hunters[ch].position.x, hunters[ch].position.y, list[0].y);
+				}
+			}
+			if(show) {
+			for(var i = 0; i < hunters.length; i++) {
+				hunters[i].render();
+				if(i < food.length) {
+					food[i].render();
+				}
+			}
+		}
+			counter++;
+			bst = -100000;	
+		for(var i = 0; i < hunters.length; i++) {
+			avg += hunters[i].gene.fitness;
+			if(hunters[i].gene.fitness > bst) bst = hunters[i].gene.fitness;
+		}
+		avg /= hunters.length;
+			if(counter > limit) {
+				allfit.push(avg);
+				counter = 0;
+				allfit
+				pool.epoch(0.4);
+				for(var i = 0; i < pool.genes.length; i++) {
+					hunters[i].gene = pool.genes[i];
+					hunters[i].brain.putWeights(hunters[i].gene.weights);
+					hunters[i].position.x = Disque.random(0, W);
+					hunters[i].position.y = Disque.random(0, H);
+				}
+			}
+
+
+		gen.innerHTML = "Generation: " + pool.generation;
+		avgFit.innerHTML = "Average Fitness: " + avg;
+		bestFit.innerHTML = "Best Fitness: " + bst;
+		}, 1);
+		
+	</script>
+	<p id="gen">Generation: 0</p>
+	<p id="avgFit">Average Fitness: 0</p>
+	<p id="bestFit">Best Fitness: 0</p>
+</body>
+</html>

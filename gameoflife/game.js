@@ -26,7 +26,7 @@ function Hunter() {
 	this.brain.create();
 	this.gene = new gene(this.brain.getWeights().slice(0), 0);
 	this.update = function(tx, ty) {
-		this.gene.fitness -= Math.abs(this.speed) * 0.001;
+		this.gene.fitness -= Math.abs(this.speed) * 0.005;
 		this.position.x += this.speed * MAXHUNTERSPEED * Math.cos(this.orient);
 		this.position.y += this.speed * MAXHUNTERSPEED * Math.sin(this.orient);
 		/*if(this.position.x <= this.body.radius) this.position.x = W - this.body.radius - 1;
@@ -57,26 +57,30 @@ function Hunter() {
 		this.body.render();
 	}
 }
-MAXFOODSPEED = 1.5;
+MAXFOODSPEED = 2.5;
 function Food() {
 	this.position = v(Disque.random(0, W), Disque.random(0, H));
 	this.body = new circle(this.position, 5, new color(0,0,0));
 	this.speed = Disque.random(-1, 1);
 	this.orient = Disque.random(0, Math.PI * 2.0);
-	this.update = function(tx, ty, d) {
+	this.brain = new NeuralNetwork();
+	this.brain.numInputs = 6;
+	this.brain.numOutputs = 2;
+	this.brain.NPR = 6;
+	this.brain.numHiddenLayers = 1;
+	this.brain.create();
+	this.gene = new gene(this.brain.getWeights().slice(0), 0);
+	this.update = function(tx, ty, t2x, t2y, t3x, t3y) {
 		this.position.x += this.speed * MAXFOODSPEED * Math.cos(this.orient);
 		this.position.y += this.speed * MAXFOODSPEED * Math.sin(this.orient);
 		this.position.x = Math.max(this.position.x, this.body.radius);
 		this.position.y = Math.max(this.position.y, this.body.radius);
 		this.position.x = Math.min(this.position.x, W - this.body.radius);
 		this.position.y = Math.min(this.position.y, H - this.body.radius);
-		if(Math.sqrt(d) < 100 * this.body.radius) {
-			this.orient = -Math.atan2(this.position.y - ty, this.position.x - tx);
-		}
-		this.orient += Disque.random(-0.1, 0.1);
-		this.speed += Disque.random(-0.015, 0.015);
-		this.speed = Math.max(-1, this.speed);
-		this.speed = Math.min(1, this.speed);
+		var op = this.brain.update(new Array(tx - this.position.x, ty - this.position.y, t2x - this.position.x, t2y - this.position.y, Math.cos(this.orient), Math.sin(this.orient)));
+		//clearInterval(a);
+		this.orient = (op[0]) * Math.PI * 2;
+		this.speed =  op[1];
 	}
 	this.render = function() {
 		this.body.render();

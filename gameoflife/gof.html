@@ -3,23 +3,78 @@
 	<script type="text/javascript" src="disquemath.js"></script>	
 	<script type="text/javascript" src="neuralnetwork.js"></script>
 	<script type="text/javascript" src="game.js"></script>
+	<script type="text/javascript" src="http://www.chartjs.org/assets/Chart.min.js"></script>
 </head>
 <body>
-	<canvas id="gameboard" width="800" height="640"></canvas>
+	<table>
+		<tr>
+			<td><canvas id="gameboard" width="800" height="640"></canvas></canvas></td>
+			<td>
+				<div style="height: 600px; width: 200px;">
+
+					<fieldset>
+						<legend>Display Options</legend>
+						<input type="checkbox" id="showgraph"/>Show Fitness Graph<br />
+						<input type="checkbox" id="freeze" />Freeze<br />
+						<input type="checkbox" id="evo" checked="true" />Evolve<br />
+					</fieldset>
+					<br/>
+					<p id="gen">Generation: 0</p>
+					<p id="avgFit">Average Fitness: 0</p>
+					<p id="bestFit">Best Fitness: 0</p>
+					<br/>
+					<button onclick="getgene()" id="gg">Get Best Genome:</button>
+					<textarea style="width: 200px; height: 350px; resize: none" id="genetext" wrap="true"></textarea>
+					<button onclick="setgene()" id="sg">Insert Genome</button>
+				</div>
+
+			</td>
+
+		</tr>
+	</table>
+	
 	<script type="text/javascript">
 		C = gameboard.getContext('2d');
 		var pool = new GenePool();
+		var foodpool = new GenePool();
+		foodpool.mutationRate = 0.4;
 		var hunters = new Array();
 		var food = new Array();
-		for(var i = 0; i < 30; i++) {
+		var renderonce = false;
+		for(var i = 0; i < 20; i++) {
 			var a = new Hunter();
 			hunters.push(a);
 			pool.genes.push(a.gene);
 		}
-		for(var i = 0; i < 20; i++) {
+		for(var i = 0; i < 30; i++) {
 			var a = new Food();
 			food.push(a);
+			foodpool.genes.push(a.gene);
 		}
+    startingData = {
+      labels: [],
+      datasets: [
+          {
+              fillColor: "rgba(220,220,220,0.2)",
+              strokeColor: "rgba(220,220,220,1)",
+              pointColor: "rgba(220,220,220,1)",
+              pointStrokeColor: "#fff",
+              data: []
+          },
+          {
+              fillColor: "rgba(151,187,205,0.2)",
+              strokeColor: "rgba(151,187,205,1)",
+              pointColor: "rgba(151,187,205,1)",
+              pointStrokeColor: "#fff",
+              data: []
+          }
+      ]
+    },
+    latestLabel = 0;
+
+// Reduce the animation steps for demo clarity.
+var myLiveChart = new Chart(C).Line(startingData, {animationSteps: 15});
+
 
 		function findClosest(a, b, list) {
 			for(var i = 0; i < b.length; i++) {
@@ -29,72 +84,144 @@
 			return list[0].x;
 		}
 
+		function findClosest3(a, b, list) {
+			for(var i = 0; i < b.length; i++) {
+				list.push(v(i, (a.position.x - b[i].position.x) * (a.position.x - b[i].position.x)  + (a.position.y - b[i].position.y) * (a.position.y - b[i].position.y)));
+			}
+			list.sort(function(a, b) { return a.y - b.y; });
+			return new Array(list[0].x, list[1].x, list[2].x);
+		}
+
 		function resolveCollision(a, b, max) {
 			for(var i = 0; i < max; i++) {
 				if((a.position.x - food[b[i].x].position.x) * (a.position.x - food[b[i].x].position.x)  + (a.position.y - food[b[i].x].position.y) * (a.position.y - food[b[i].x].position.y) < (a.body.radius + food[b[i].x].body.radius) * (a.body.radius + food[b[i].x].body.radius)) {
 					food[b[i].x].position.x = Disque.random(0, W);
 					food[b[i].x].position.y = Disque.random(0, H);
 					a.gene.fitness += 5;
+					food[b[i].x].gene.fitness -= 5;
 				}
 			}
 		}
 
 		var counter = 0;
-		var limit = 1000;
+		var limit = 5000;
 		var allfit = new Array();
+		var allbst = new Array();
 		var avg = 0;
 		var bst = -100000;
-		var show = true;
-		var a = setInterval(function() {
-			C.clearRect(0, 0, W, H);
-			for(var i = 0; i < hunters.length; i++) {
-				var list = new Array();
-				var ch = findClosest(hunters[i], food, list);
-				resolveCollision(hunters[i], list, 2);
-				hunters[i].update(food[ch].position.x, food[ch].position.y);
-				if(i < food.length) {
+		var init = false;
+		var bstindex = -1;
+		a = setInterval(function() {
+			if(!freeze.checked) {
+				for(var i = 0; i < hunters.length; i++) {
 					var list = new Array();
-					var ch = findClosest(food[i], hunters, list);
-					food[i].update(hunters[ch].position.x, hunters[ch].position.y, list[0].y);
+					var ch = findClosest(hunters[i], food, list);
+					resolveCollision(hunters[i], list, 2);
+					hunters[i].update(food[ch].position.x, food[ch].position.y);
 				}
-			}
-			if(show) {
-			for(var i = 0; i < hunters.length; i++) {
-				hunters[i].render();
-				if(i < food.length) {
-					food[i].render();
+				for(var i = 0; i < food.length; i++) {
+					var list = new Array();
+					var ch = findClosest3(food[i], hunters, list);
+					var cf = findClosest(food[i], food, list);
+					food[i].update(hunters[ch[0]].position.x, hunters[ch[0]].position.y, hunters[ch[1]].position.x, hunters[ch[1]].position.y, food[cf].position.x, food[cf].position.y);
 				}
-			}
-		}
-			counter++;
-			bst = -100000;	
-		for(var i = 0; i < hunters.length; i++) {
-			avg += hunters[i].gene.fitness;
-			if(hunters[i].gene.fitness > bst) bst = hunters[i].gene.fitness;
-		}
-		avg /= hunters.length;
-			if(counter > limit) {
-				allfit.push(avg);
-				counter = 0;
-				allfit
-				pool.epoch(0.4);
-				for(var i = 0; i < pool.genes.length; i++) {
-					hunters[i].gene = pool.genes[i];
-					hunters[i].brain.putWeights(hunters[i].gene.weights);
-					hunters[i].position.x = Disque.random(0, W);
-					hunters[i].position.y = Disque.random(0, H);
+				if(!showgraph.checked) {
+					C.clearRect(0, 0, W, H);
+					for(var i = 0; i < hunters.length; i++) {
+						hunters[i].render();
+						
+					}
+					for(var i = 0; i < food.length; i++) {
+							food[i].render();
+						}
+					if(renderonce) myLiveChart.destroy();
+					renderonce = false;
 				}
-			}
+				else {
+					if(!renderonce) {
+						myLiveChart.render();
+						renderonce = true;
+					}
+				} 
+				counter++;
+				bst = -100000;	
+				for(var i = 0; i < hunters.length; i++) {
+					avg += hunters[i].gene.fitness;
+					if(hunters[i].gene.fitness > bst) {
+						bst = hunters[i].gene.fitness;
+						bstindex = i
+					}
+				}
+				avg /= hunters.length;
+				if(counter > limit && evo.checked) {
+					if(showgraph.checked) {
+						for(var i = 0; i < allfit.length; i++) {
+							myLiveChart.addData([allfit[i], allbst[i]], ++latestLabel);
+						}
+						allfit.length = 0;
+						bestFit.length = 0;
+					 	myLiveChart.addData([avg, bst], ++latestLabel);
+					}
+					else {
+						allfit.push(avg);
+						allbst.push(bst);
+					}
+					counter = 0;
+					pool.epoch(0.4);
+					foodpool.epoch(0.5);
+					for(var i = 0; i < pool.genes.length; i++) {
+						hunters[i].gene = pool.genes[i];
+						hunters[i].brain.putWeights(hunters[i].gene.weights);
+						hunters[i].position.x = Disque.random(0, W);
+						hunters[i].position.y = Disque.random(0, H);
+					}
+					for(var i = 0; i < foodpool.genes.length; i++) {
+						food[i].gene = foodpool.genes[i];
+						food[i].brain.putWeights(food[i].gene.weights);
+						food[i].position.x = Disque.random(0, W);
+						food[i].position.y = Disque.random(0, H);
+					}
+				}
 
 
-		gen.innerHTML = "Generation: " + pool.generation;
-		avgFit.innerHTML = "Average Fitness: " + avg;
-		bestFit.innerHTML = "Best Fitness: " + bst;
+				gen.innerHTML = "Generation: " + pool.generation;
+				avgFit.innerHTML = "Average Fitness: " + avg;
+				bestFit.innerHTML = "Best Fitness: " + bst;
+			}
 		}, 1);
-		
+		function getlabels(n) {
+			var k = new Array();
+			for(var i = 0; i < n; i ++) {
+				k.push(i);
+			}
+			return k;
+		}
+		function getgene() {
+			var txt = "";
+			for(var i = 0; i < hunters[bstindex].gene.weights.length; i++) {
+				txt += hunters[bstindex].gene.weights[i] + "|";
+			}
+			genetext.innerHTML = txt;
+		}
+		function cleanArray(actual) {
+  			var newArray = new Array();
+  			for (var i = 0; i < actual.length; i++) {
+    		if (actual[i]) {
+      			newArray.push(actual[i]);
+    		}
+  		}		
+ 		return newArray;
+		}
+		function setgene() {
+			var array = genetext.innerHTML.split("|");
+			array = cleanArray(array);
+			for(var i = 0; i < array.length; i++) {
+				array[i] = parseFloat(array[i]);
+			}
+			var a = hunters[Math.floor(random(0, hunters.length))];
+			a.brain.putWeights(array);
+			a.gene = new gene(a.brain.getWeights(), 100);
+		}
 	</script>
-	<p id="gen">Generation: 0</p>
-	<p id="avgFit">Average Fitness: 0</p>
-	<p id="bestFit">Best Fitness: 0</p>
 </body>
 </html>

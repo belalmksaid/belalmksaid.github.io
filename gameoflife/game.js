@@ -90,7 +90,7 @@ function Food() {
 		for(var i = Math.floor(this.gene.weights.length / 2); i < this.gene.weights.length; i++) {
 			g += Math.abs(this.gene.weights[i]) / (this.gene.weights.length / 2);
 		}
-		this.body.color = new color(Math.floor(g * 255), 255 - Math.floor(r * 255),Math.floor(r * 255));
+		this.body.color = new color(Math.floor(g * 255), Math.floor(r * 255), 255 - Math.floor(r * 255));
 	}
 	this.render = function() {
 		this.body.render();

@@ -81,6 +81,16 @@ function Food() {
 		//clearInterval(a);
 		this.orient = (op[0]) * Math.PI * 2;
 		this.speed =  op[1];
+		var r = 0;
+		var g = 0;
+		var b = 0;
+		for(var i = 0; i < this.gene.weights.length / 2; i++) {
+			r += Math.abs(this.gene.weights[i]) / (this.gene.weights.length / 2);
+		}
+		for(var i = Math.floor(this.gene.weights.length / 2); i < this.gene.weights.length; i++) {
+			g += Math.abs(this.gene.weights[i]) / (this.gene.weights.length / 2);
+		}
+		this.body.color = new color(Math.floor(g * 255), 255 - Math.floor(r * 255),Math.floor(r * 255));
 	}
 	this.render = function() {
 		this.body.render();

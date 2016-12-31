@@ -15,6 +15,7 @@
 					<fieldset>
 						<legend>Display Options</legend>
 						<input type="checkbox" id="showgraph"/>Show Fitness Graph<br />
+						<input type="checkbox" id="border" />Hard Borders<br />
 						<input type="checkbox" id="freeze" />Freeze<br />
 						<input type="checkbox" id="evo" checked="true" />Evolve<br />
 					</fieldset>
@@ -112,6 +113,7 @@ var myLiveChart = new Chart(C).Line(startingData, {animationSteps: 15});
 		var init = false;
 		var bstindex = -1;
 		a = setInterval(function() {
+			B = border.checked;
 			if(!freeze.checked) {
 				for(var i = 0; i < hunters.length; i++) {
 					var list = new Array();

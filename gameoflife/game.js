@@ -1,4 +1,5 @@
 C = 0; W = 800;  H = 640;
+B = false;
 function circle(p, r, c) {
 	this.center = p;
 	this.radius = r;
@@ -29,14 +30,10 @@ function Hunter() {
 		this.gene.fitness -= Math.abs(this.speed) * 0.005;
 		this.position.x += this.speed * MAXHUNTERSPEED * Math.cos(this.orient);
 		this.position.y += this.speed * MAXHUNTERSPEED * Math.sin(this.orient);
-		/*if(this.position.x <= this.body.radius) this.position.x = W - this.body.radius - 1;
-		else if(this.position.x >= W - this.body.radius) this.position.x = this.body.radius + 1;
-		if(this.position.y <= this.body.radius) this.position.y	 = H - this.body.radius - 1;
-		else if(this.position.y >= H - this.body.radius) this.position.y = this.body.radius + 1;*/
-		this.position.x = Math.max(this.position.x, this.body.radius);
-		this.position.y = Math.max(this.position.y, this.body.radius);
-		this.position.x = Math.min(this.position.x, W - this.body.radius);
-		this.position.y = Math.min(this.position.y, H - this.body.radius);
+		//this.position.x = Math.max(this.position.x, this.body.radius);
+		//this.position.y = Math.max(this.position.y, this.body.radius);
+		//this.position.x = Math.min(this.position.x, W - this.body.radius);
+		//this.position.y = Math.min(this.position.y, H - this.body.radius);
 		var op = this.brain.update(new Array(tx - this.position.x, ty - this.position.y, Math.cos(this.orient), Math.sin(this.orient)));
 		this.orient = (op[0]) * Math.PI * 2;
 		this.speed =  op[1];
@@ -52,6 +49,18 @@ function Hunter() {
 			g += Math.abs(this.gene.weights[i]) / (this.gene.weights.length / 2);
 		}
 		this.body.color = new color(Math.floor(r * 255), 255 - Math.floor(g * 255),Math.floor(g * 255));
+		if(!B) {
+			if(this.position.x < 0) this.position.x = W;
+			else if(this.position.x > W) this.position.x = 0;
+			if(this.position.y < 0) this.position.y	 = H;
+			else if(this.position.y > H) this.position.y = 0;
+		}
+		else {
+			this.position.x = Math.max(this.position.x, this.body.radius);
+		    this.position.y = Math.max(this.position.y, this.body.radius);
+		    this.position.x = Math.min(this.position.x, W - this.body.radius);
+		    this.position.y = Math.min(this.position.y, H - this.body.radius);
+		}
 	}
 	this.render = function() {
 		this.body.render();
@@ -64,7 +73,7 @@ function Food() {
 	this.speed = Disque.random(-1, 1);
 	this.orient = Disque.random(0, Math.PI * 2.0);
 	this.brain = new NeuralNetwork();
-	this.brain.numInputs = 6;
+	this.brain.numInputs = 9;
 	this.brain.numOutputs = 2;
 	this.brain.NPR = 6;
 	this.brain.numHiddenLayers = 1;
@@ -73,11 +82,11 @@ function Food() {
 	this.update = function(tx, ty, t2x, t2y, t3x, t3y) {
 		this.position.x += this.speed * MAXFOODSPEED * Math.cos(this.orient);
 		this.position.y += this.speed * MAXFOODSPEED * Math.sin(this.orient);
-		this.position.x = Math.max(this.position.x, this.body.radius);
-		this.position.y = Math.max(this.position.y, this.body.radius);
-		this.position.x = Math.min(this.position.x, W - this.body.radius);
-		this.position.y = Math.min(this.position.y, H - this.body.radius);
-		var op = this.brain.update(new Array(tx - this.position.x, ty - this.position.y, t2x - this.position.x, t2y - this.position.y, Math.cos(this.orient), Math.sin(this.orient)));
+		//this.position.x = Math.max(this.position.x, this.body.radius);
+		//this.position.y = Math.max(this.position.y, this.body.radius);
+		//this.position.x = Math.min(this.position.x, W - this.body.radius);
+		//this.position.y = Math.min(this.position.y, H - this.body.radius);
+		var op = this.brain.update(new Array(tx - this.position.x, ty - this.position.y, t2x - this.position.x, t2y - this.position.y, t3x - this.position.x, t3y - this.position.y, Math.cos(this.orient), Math.sin(this.orient), this.gene.fitness));
 		//clearInterval(a);
 		this.orient = (op[0]) * Math.PI * 2;
 		this.speed =  op[1];
@@ -90,7 +99,19 @@ function Food() {
 		for(var i = Math.floor(this.gene.weights.length / 2); i < this.gene.weights.length; i++) {
 			g += Math.abs(this.gene.weights[i]) / (this.gene.weights.length / 2);
 		}
-		this.body.color = new color(Math.floor(g * 255), Math.floor(r * 255), 255 - Math.floor(r * 255));
+		this.body.color = new color(Math.floor(r * 255), 255 - Math.floor(g * 255), Math.floor(g * 255));
+		if(!B) {
+			if(this.position.x < 0) this.position.x = W;
+			else if(this.position.x > W) this.position.x = 0;
+			if(this.position.y < 0) this.position.y	 = H;
+			else if(this.position.y > H) this.position.y = 0;
+		}
+		else {
+			this.position.x = Math.max(this.position.x, this.body.radius);
+		    this.position.y = Math.max(this.position.y, this.body.radius);
+		    this.position.x = Math.min(this.position.x, W - this.body.radius);
+		    this.position.y = Math.min(this.position.y, H - this.body.radius);
+		}
 	}
 	this.render = function() {
 		this.body.render();

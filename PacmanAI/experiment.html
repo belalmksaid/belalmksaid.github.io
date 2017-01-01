@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<script type="text/javascript" src="gamecode/pacmanMOD.js"></script>
+		<script type="text/javascript" src="gamecode/modernizr-1.5.min.js"></script>
+		<style type="text/css">
+			html *
+			{
+				margin: 0px; 
+				padding: 0px;
+			}
+			@font-face 
+		 	{
+	    		font-family: 'BDCartoonShoutRegular';
+        		src: url('gamecode/BD_Cartoon_Shout-webfont.ttf') format('truetype');
+	    		font-weight: normal;
+	    		font-style: normal;
+      		}
+		</style>
+	</head>
+	<body>
+		<div id="pace"></div>
+		<script type="text/javascript">
+			PACMAN.init(document.getElementById("pace"), "./gamecode");
+		</script>
+	</body>
+</html>

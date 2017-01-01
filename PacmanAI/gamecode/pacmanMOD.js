@@ -8,6 +8,17 @@
  * do proper ghost mechanics (blinky/wimpy etc)
  */
 
+ L = 0;
+ R = 0;
+ U = 0;
+ D = 0;
+ ISV = 0;
+ LOC = new Array();
+ STAT = 0;
+ MOD = false;
+ FITNESS = 0;
+
+
 var NONE        = 4,
     UP          = 3,
     LEFT        = 2,
@@ -98,7 +109,8 @@ Pacman.Ghost = function (game, map, colour) {
         eatable = game.getTick();
     };
 
-    function eat() { 
+    function eat() {
+        console.log("eaten");
         eatable = null;
         eaten = game.getTick();
     };
@@ -147,6 +159,7 @@ Pacman.Ghost = function (game, map, colour) {
     
         if (eatable && secondsAgo(eatable) > 8) {
             eatable = null;
+            ISV = 0;
         }
         
         if (eaten && secondsAgo(eaten) > 3) { 
@@ -265,6 +278,10 @@ Pacman.Ghost = function (game, map, colour) {
         };
     };
     
+    function pos() {
+        return position;
+    };
+
     return {
         "eat"         : eat,
         "isVunerable" : isVunerable,
@@ -272,7 +289,8 @@ Pacman.Ghost = function (game, map, colour) {
         "makeEatable" : makeEatable,
         "reset"       : reset,
         "move"        : move,
-        "draw"        : draw
+        "draw"        : draw,
+        "position"    : pos
     };
 };
 
@@ -291,19 +309,20 @@ Pacman.User = function (game, map) {
     keyMap[KEY.ARROW_RIGHT] = RIGHT;
     keyMap[KEY.ARROW_DOWN]  = DOWN;
 
-    function addScore(nScore) { 
+    function addScore(nScore) {
+        FITNESS += nScore;
         score += nScore;
         if (score >= 10000 && score - nScore < 10000) { 
             lives += 1;
         }
     };
 
-    function theScore() { 
+    function theScore() {
         return score;
     };
 
     function loseLife() { 
-        lives -= 1;
+        FITNESS -= 500;
     };
 
     function getLives() {
@@ -408,7 +427,10 @@ Pacman.User = function (game, map) {
         if (npos === null) {
             npos = getNewCoord(direction, position);
         }
-        
+        U = map.isWallSpace(next(getNewCoord(UP, position), UP)) ? 1 : 0;
+        D = map.isWallSpace(next(getNewCoord(DOWN, position), DOWN)) ? 1 : 0;
+        L = map.isWallSpace(next(getNewCoord(LEFT, position), LEFT)) ? 1 : 0;
+        R = map.isWallSpace(next(getNewCoord(RIGHT, position), RIGHT)) ? 1 : 0;
         if (onGridSquare(position) && map.isWallSpace(next(npos, direction))) {
             direction = NONE;
         }
@@ -750,7 +772,7 @@ var PACMAN = (function () {
 
     function keyDown(e) {
         if (e.keyCode === KEY.N) {
-            startNewGame();
+            //startNewGame();
         } else if (e.keyCode === KEY.S) {
             localStorage["soundDisabled"] = !soundDisabled();
         } else if (e.keyCode === KEY.P && state === PAUSE) {
@@ -761,7 +783,7 @@ var PACMAN = (function () {
             setState(PAUSE);
             map.draw(ctx);
             dialog("Paused");
-        } else if (state !== PAUSE) {   
+        } else if (state !== PAUSE) {  
             return user.keyDown(e);
         }
         return true;
@@ -775,7 +797,8 @@ var PACMAN = (function () {
         }
     }
 
-    function setState(nState) { 
+    function setState(nState) {
+        STAT = nState;
         state = nState;
         stateChanged = true;
     };
@@ -824,9 +847,9 @@ var PACMAN = (function () {
     }
 
     function mainDraw() { 
-
+        MOD = false;
         var diff, u, i, len, nScore;
-        
+        LOC.length = 0;
         ghostPos = [];
 
         for (i = 0, len = ghosts.length; i < len; i += 1) {
@@ -841,6 +864,8 @@ var PACMAN = (function () {
         
         for (i = 0, len = ghosts.length; i < len; i += 1) {
             ghosts[i].draw(ctx);
+            LOC.push(ghosts[i].position().x);
+            LOC.push(ghosts[i].position().y);
         }                     
         user.draw(ctx);
         
@@ -861,7 +886,8 @@ var PACMAN = (function () {
                     timerStart = tick;
                 }
             }
-        }                             
+        }
+        MOD = true;                             
     };
 
     function mainLoop() {
@@ -879,7 +905,7 @@ var PACMAN = (function () {
         } else if (state === WAITING && stateChanged) {            
             stateChanged = false;
             map.draw(ctx);
-            dialog("Press N to start a New game");            
+            startNewGame();      
         } else if (state === EATEN_PAUSE && 
                    (tick - timerStart) > (Pacman.FPS / 3)) {
             map.draw(ctx);
@@ -915,6 +941,7 @@ var PACMAN = (function () {
     }
 
     function eatenPill() {
+        ISV = 1;
         timerStart = tick;
         eatenCount = 0;
         for (i = 0; i < ghosts.length; i += 1) {
@@ -974,17 +1001,16 @@ var PACMAN = (function () {
     };
         
     function loaded() {
-
-        dialog("Press N to Start");
-        
-        document.addEventListener("keydown", keyDown, true);
-        document.addEventListener("keypress", keyPress, true); 
+        startNewGame();        
+        //document.addEventListener("keydown", keyDown, true);
+        //document.addEventListener("keypress", keyPress, true); 
         
         timer = window.setInterval(mainLoop, 1000 / Pacman.FPS);
     };
     
     return {
-        "init" : init
+        "init" : init,
+        "keyDown" : keyDown
     };
     
 }());

@@ -15,8 +15,15 @@
 	<div id="container" style="text-align: center;">
 	</div>
 	<script type="text/javascript">
-		for(var i = 0; i < 16; i++) {
+		var n = 16;
+		for(var i = 0; i < n; i++) {
 			container.innerHTML += "<iframe src='experiment.html' id='pace" + i + "' style='height:426px; width:342px; display: inline-block; margin: 2px'></iframe>";
+		}
+		var genePool = new GenePool();
+		genePool.mutationRate = 0.4;
+		for(var  i = 0; i < n; i++) {
+			var gene = document.getElementById("pace" + i).pacGene;
+			genePool.genes.push(gene);
 		}
 	</script>
 	</body>

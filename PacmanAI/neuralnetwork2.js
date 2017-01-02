@@ -185,7 +185,7 @@ function GenePool() {
 		}
 		console.log(this.genes);
 		if(this.genes.length / old.length > elite) {
-			this.genes.splice(0, Math.floot(this.genes.length - elite * old.length));
+			this.genes.splice(0, Math.floor(this.genes.length - elite * old.length));
 		}
 		
 		if(this.genes.length < 2 && old.length < 2) {

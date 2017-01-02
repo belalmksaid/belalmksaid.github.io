@@ -166,9 +166,9 @@ function GenePool() {
 	}
 
 	this.epoch = function(elite) {
+		var avg = this.averageFitness();
 		var old = this.genes.slice(0);
 		this.genes.length = 0;
-		var avg = this.averageFitness();
 		old.sort(function(a, b) {
 		if(a.fitness > b.fitness)
 			return 1;

@@ -178,41 +178,6 @@ function GenePool() {
 		return 0;
 		});
 		console.log(old);
-		for(var i = 0; i < old.length ; i++) {
-			if(old[i].fitness > avg) {
-				this.genes.push(old[i].clone());
-				console.log(his.genes[this.genes.length - 1].fitness);
-				this.mutate(this.genes[this.genes.length - 1].weights);
-				this.genes[this.genes.length - 1].fitness = 0;
-			}
-		}
-		if(this.genes.length / old.length > elite) {
-			this.genes.splice(0, Math.floor(this.genes.length - elite * old.length));
-		}
 		
-		if(this.genes.length < 2 && old.length < 2) {
-			this.genes.push(this.genes[0].clone());
-		}
-		else if(this.genes.length < 2) {
-			this.genes.push(new gene(old[old.length - 2].weights.slice(0), 0));
-		}
-
-		if(this.genes.length < old.length && this.genes.length % 2 != 0) {
-			this.genes.push(old[old.length - 1].clone());
-			this.genes[this.genes.length - 1].fitness = 0;
-		}
-
-		var original = this.genes.length;
-		while(this.genes.length != old.length) {
-			var c1 = new Array(), c2 = new Array();
-			var p1 = this.genes[Math.floor(random(0, original))].weights;
-			var p2 = this.genes[Math.floor(random(0, original))].weights;
-			this.breed(p1, p2, c1, c2);
-			this.mutate(c1);
-			this.mutate(c2);
-			this.genes.push(new gene(c1, 0));
-			this.genes.push(new gene(c2, 0));
-		}
-		this.generation++;
 	}
 }

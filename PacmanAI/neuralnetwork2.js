@@ -189,7 +189,7 @@ function GenePool() {
 			this.genes.push(new gene(old[old.length - 2].weights.splice(0), 0));
 		}
 
-		if(this.genes.length < old.length && this.genes.length % != 0) {
+		if(this.genes.length < old.length && this.genes.length % 2 != 0) {
 			this.genes.push(old[old.length - 1].clone());
 			this.genes[this.genes.length - 1].fitness = 0;
 		}

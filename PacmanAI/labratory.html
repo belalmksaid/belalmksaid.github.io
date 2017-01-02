@@ -87,10 +87,11 @@
 			genePool.mutationRate = 0.4;
 			for(var  i = 0; i < n; i++) {
 				var gene = document.getElementById("pace" + i).contentWindow.pacGene;
+				console.log(document.getElementById("pace" + i).contentWindow.pacGene);
 				genePool.genes.push(gene);
 			}
 
-			setInterval(function() {
+			/*setInterval(function() {
 			gen.innerHTML = "Generation: " + genePool.generation;
 			if(cint <= 0) {
 				cint = 1000;
@@ -106,7 +107,7 @@
 			}
 			avg /= genePool.genes.length;
 
-		}, 1000/60);
+		}, 1000/60);*/
 		})
 		
 

@@ -867,7 +867,8 @@ var PACMAN = (function () {
             ghosts[i].draw(ctx);
             LOC.push(ghosts[i].position().x);
             LOC.push(ghosts[i].position().y);
-        }                     
+        }
+        FITNESS-=0.5;                     
         user.draw(ctx);
         
         userPos = u["new"];

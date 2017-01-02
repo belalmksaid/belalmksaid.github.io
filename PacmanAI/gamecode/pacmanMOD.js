@@ -523,7 +523,7 @@ Pacman.User = function (game, map) {
     };
 
     function draw(ctx) { 
-        FITNESS -= 0.1;
+        //FITNESS -= 0.1;
         var s     = map.blockSize, 
             angle = calcAngle(direction, position);
 

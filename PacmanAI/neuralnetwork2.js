@@ -166,15 +166,9 @@ function GenePool() {
 	}
 
 	this.epoch = function(elite) {
-		var old = this.genes.splice(0);
+		var old = this.genes.slice(0);
 		this.genes.length = 0;
 		var avg = this.averageFitness();
-		for(var i = 0; i < old.length ; i++) {
-			if(old[i].fitness > avg) {
-				this.genes.push(old[i].clone());
-				this.genes[this.genes.length - 1].fitness = 0;
-			}
-		}
 		old.sort(function(a, b) {
 		if(a.fitness > b.fitness)
 			return 1;
@@ -182,11 +176,23 @@ function GenePool() {
 			return -1;
 		return 0;
 		});
+		for(var i = 0; i < old.length ; i++) {
+			if(old[i].fitness > avg) {
+				this.genes.push(old[i].clone());
+				this.mutate(this.genes[this.genes.length - 1].weights);
+				this.genes[this.genes.length - 1].fitness = 0;
+			}
+		}
+		console.log(this.genes);
+		if(this.genes.length / old.length > elite) {
+			this.genes.splice(0, Math.floot(this.genes.length - elite * old.length));
+		}
+		
 		if(this.genes.length < 2 && old.length < 2) {
 			this.genes.push(this.genes[0].clone());
 		}
 		else if(this.genes.length < 2) {
-			this.genes.push(new gene(old[old.length - 2].weights.splice(0), 0));
+			this.genes.push(new gene(old[old.length - 2].weights.slice(0), 0));
 		}
 
 		if(this.genes.length < old.length && this.genes.length % 2 != 0) {

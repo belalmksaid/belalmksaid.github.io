@@ -116,7 +116,6 @@ Pacman.Ghost = function (game, map, colour, n) {
     };
 
     function eat() {
-        console.log("eaten");
         eatable = null;
         eaten = game.getTick();
     };

@@ -5,7 +5,7 @@
 		<script type="text/javascript" src="neuralnetwork2.js"></script>
 		<script type="text/javascript">
 			var pacBrain = new NeuralNetwork();
-			pacBrain.numInputs = 13;
+			pacBrain.numInputs = 15;
 			pacBrain.numOutputs = 1;
 			pacBrain.numHiddenLayers = 2;
 			pacBrain.create();
@@ -45,6 +45,8 @@
 					temp.push(L);
 					temp.push(R);
 					temp.push(ISV);
+					temp.push(Math.round(position.x / 10));
+					temp.push(Math.round(position.y / 10));
 					var o = pacBrain.update(temp)[0];
 					if(o < 0.25) {
 						PACMAN.keyDown({"keyCode" : KEY.ARROW_DOWN, "preventDefault": function() {}, "stopPropagation" : function() {}});

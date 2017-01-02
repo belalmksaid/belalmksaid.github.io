@@ -177,6 +177,7 @@ function GenePool() {
 			return -1;
 		return 0;
 		});
+		console.log(old);
 		for(var i = 0; i < old.length ; i++) {
 			if(old[i].fitness > avg) {
 				this.genes.push(old[i].clone());

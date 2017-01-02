@@ -181,7 +181,7 @@ function GenePool() {
 		for(var i = 0; i < old.length ; i++) {
 			if(old[i].fitness > avg) {
 				this.genes.push(old[i].clone());
-				console.log(his.genes[this.genes.length - 1].fitness);
+				console.log(this.genes[this.genes.length - 1].fitness);
 				this.mutate(this.genes[this.genes.length - 1].weights);
 				this.genes[this.genes.length - 1].fitness = 0;
 			}

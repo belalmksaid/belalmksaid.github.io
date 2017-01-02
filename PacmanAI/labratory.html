@@ -18,14 +18,14 @@
 		<script type="text/javascript" src="neuralnetwork.js"></script>
 	</head>
 	<body>
-	<h1 style="text-align: center;">AI LAB</h1>
+	<h1 style="text-align: center;">AI TRAINING LAB</h1>
 	<br/>
 	<div id="controlPanel">
 	<table>
 		<tr >
 			<td><p id="gen">Generation: 0</p>
 		</td>
-			<td><p id="evo">Time Until Next Evolution:</p></td>
+			<td><p id="evo">Time to next generation: </p></td>
 		</tr>
 		<tr>
 			<th colspan="2" style="text-align: left;">
@@ -104,7 +104,7 @@
 				}
 				cint = c;
 			}
-			evo.innerHTML = "Time Until Next Evolution: " + Math.floor(cint * (1/60)) + " s";
+			evo.innerHTML = "Time to next generation: " + Math.floor(cint * (1/60)) + " s";
 			cint--;
 			for(var i = 0; i < genePool.genes.length; i++) {
 				avg += genePool.genes[i].fitness;

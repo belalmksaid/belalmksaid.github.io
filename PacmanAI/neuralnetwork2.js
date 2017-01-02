@@ -183,7 +183,7 @@ function GenePool() {
 				this.genes[this.genes.length - 1].fitness = 0;
 			}
 		}
-		console.log(this.genes);
+		console.log(avg);
 		if(this.genes.length / old.length > elite) {
 			this.genes.splice(0, Math.floor(this.genes.length - elite * old.length));
 		}

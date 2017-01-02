@@ -128,11 +128,15 @@ function GenePool() {
 	this.genes = new Array();
 	this.mutationRate = 0.3;
 	this.crossOverRate = 0.8;
+	this.radiationRate = 0.1;
 	this.generation = 0;
 	this.mutate = function(w) {
 		for(var i = 0; i < w.length; i++) {
 			if(random(0, 1) <= this.mutationRate) {
 				w[i] += random(-1.0, 1.0) * 0.3;
+			}
+			if(random(0, 1) <= this.radiationRate) {
+				w[i] = random(-1.0, 1.0);
 			}
 		}
 	}

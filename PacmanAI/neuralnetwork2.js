@@ -157,9 +157,24 @@ function GenePool() {
 		}
 	}
 
+	this.averageFitness = function() {
+		var avg = 0;
+		for(var i = 0; i < this.genes.length; i++) {
+			avg += this.genes[i].fitness * (1.0 / this.genes.length);
+		}
+		return avg;
+	}
+
 	this.epoch = function(elite) {
 		var old = this.genes.splice(0);
 		this.genes.length = 0;
+		var avg = this.averageFitness();
+		for(var i = 0; i < old.length ; i++) {
+			if(old[i].fitness > avg) {
+				this.genes.push(old[i].clone());
+				this.genes[this.genes.length - 1].fitness = 0;
+			}
+		}
 		old.sort(function(a, b) {
 		if(a.fitness > b.fitness)
 			return 1;
@@ -167,14 +182,18 @@ function GenePool() {
 			return -1;
 		return 0;
 		});
-		var midway = Math.floor(old.length * elite);
-		midway -= midway % 2;
-		if(midway < 2) midway = 2;
-		midway = old.length - midway;
-		for(var i = midway; i < old.length; i++) {
-			this.genes.push(old[i].clone());
+		if(this.genes.length < 2 && old.length < 2) {
+			this.genes.push(this.genes[0].clone());
+		}
+		else if(this.genes.length < 2) {
+			this.genes.push(new gene(old[old.length - 2].weights.splice(0), 0));
+		}
+
+		if(this.genes.length < old.length && this.genes.length % != 0) {
+			this.genes.push(old[old.length - 1].clone());
 			this.genes[this.genes.length - 1].fitness = 0;
 		}
+
 		var original = this.genes.length;
 		while(this.genes.length != old.length) {
 			var c1 = new Array(), c2 = new Array();

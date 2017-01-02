@@ -128,7 +128,7 @@ function GenePool() {
 	this.genes = new Array();
 	this.mutationRate = 0.3;
 	this.crossOverRate = 0.8;
-	this.radiationRate = 0.1;
+	this.radiationRate = 0.01;
 	this.generation = 0;
 	this.mutate = function(w) {
 		for(var i = 0; i < w.length; i++) {

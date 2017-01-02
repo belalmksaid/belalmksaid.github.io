@@ -323,7 +323,7 @@ Pacman.User = function (game, map) {
     };
 
     function loseLife() { 
-        FITNESS -= 500;
+        FITNESS -= 100;
     };
 
     function getLives() {

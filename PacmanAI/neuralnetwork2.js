@@ -171,7 +171,6 @@ function GenePool() {
 		midway -= midway % 2;
 		if(midway < 2) midway = 2;
 		midway = old.length - midway;
-		console.log(old);
 		for(var i = midway; i < old.length; i++) {
 			this.genes.push(old[i].clone());
 			this.genes[this.genes.length - 1].fitness = 0;

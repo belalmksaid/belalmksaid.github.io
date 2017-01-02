@@ -59,14 +59,30 @@
 		var genePool = new GenePool();
 		genePool.mutationRate = 0.4;
 		for(var  i = 0; i < n; i++) {
-			var gene = document.getElementById("pace" + i).pacGene;
+			var gene = document.getElementById("pace" + i).contentWindow.pacGene;
 			genePool.genes.push(gene);
 		}
 
 		var bstindex = 0;
 		var bst = 0;
 		var avg = 0;
-		
+		setInterval(function() {
+			gen.innerHTML = "Generation: " + genePool.generation;
+			if(cint <= 0) {
+				cint = 1000;
+			}
+			evo.innerHTML = "Time Until Next Evolution: " + Math.floor(cint * (1/60)) + " s";
+			cint--;
+			for(var i = 0; i < genePool.genes.length; i++) {
+				avg += genePool.genes[i].fitness;
+				if(genePool.genes[i].fitness > bst) {
+					bst = genePool.genes[i].fitness;
+					bstindex = i
+				}
+			}
+			avg /= genePool.genes.length;
+
+		}, 1000/60);
 		function getgene() {
 			var txt = "";
 			for(var i = 0; i < genePool.genes[bstindex].weights.length; i++) {

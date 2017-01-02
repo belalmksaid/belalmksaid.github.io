@@ -16,6 +16,7 @@
 			}
 		</style>
 		<script type="text/javascript" src="neuralnetwork.js"></script>
+			<script type="text/javascript" src="Chart.min.js"></script>
 	</head>
 	<body>
 	<h1 style="text-align: center;">AI TRAINING LAB</h1>
@@ -26,6 +27,11 @@
 			<td><p id="gen">Generation: 0</p>
 		</td>
 			<td><p id="evo">Time to next generation: </p></td>
+		</tr>
+		<tr>
+			<th colspan="2">
+				<canvas id="graph" height="300px" style="width: 100%"></canvas>
+			</th>
 		</tr>
 		<tr>
 			<th colspan="2" style="text-align: left;">
@@ -63,6 +69,30 @@
     // If we are here, it is not loaded. Set things up so we check   the status again in 100 milliseconds
     window.setTimeout('checkIframeLoaded(' + n + ');', 100);
 }
+		
+	startingData = {
+      labels: [],
+      datasets: [
+          {
+              fillColor: "rgba(220,220,220,0.2)",
+              strokeColor: "rgba(220,220,220,1)",
+              pointColor: "rgba(220,220,220,1)",
+              pointStrokeColor: "#fff",
+              data: []
+          },
+          {
+              fillColor: "rgba(151,187,205,0.2)",
+              strokeColor: "rgba(151,187,205,1)",
+              pointColor: "rgba(151,187,205,1)",
+              pointStrokeColor: "#fff",
+              data: []
+          }
+      ]
+    },
+    latestLabel = 0;
+
+// Reduce the animation steps for demo clarity.
+var myLiveChart = new Chart(graph.getContext('2d')).Line(startingData, {animationSteps: 15});
 
 		function getParameterByName(name, url) {
     		if (!url) {
@@ -101,6 +131,7 @@
 					document.getElementById("pace" + i).contentWindow.pacGene = genePool.genes[i];
 					document.getElementById("pace" + i).contentWindow.pacBrain.putWeights(genePool.genes[i].weights);
 				}
+				myLiveChart.addData([allfit[i], allbst[i]], ++latestLabel);
 				cint = c;
 			}
 			evo.innerHTML = "Time to next generation: " + Math.floor(cint * (1/60)) + " s";

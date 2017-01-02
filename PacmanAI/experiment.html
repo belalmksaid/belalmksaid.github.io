@@ -31,7 +31,7 @@
 		<script type="text/javascript">
 			PACMAN.init(document.getElementById("pace"), "./gamecode");
 			function resetScore() {
-				PACMAN.user().reset();
+				PACMAN.startNewGame();
 			}
 			setInterval(function() {
 				if(STAT == 7 && MOD) {

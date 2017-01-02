@@ -1013,7 +1013,8 @@ var PACMAN = (function () {
     return {
         "init" : init,
         "keyDown" : keyDown,
-        "user" : function() {return user;}
+        "user" : function() {return user;},
+        "startNewGame" : startNewGame
     };
     
 }());

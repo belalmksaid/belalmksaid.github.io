@@ -40,6 +40,31 @@
 	<div id="container" style="text-align: center;">
 	</div>
 	<script type="text/javascript">
+	function checkIframeLoaded(n, ftc) {
+    // Get a handle to the iframe element
+    var c = 0;
+    for(var  i = 0; i < n; i++) {
+    var iframe = document.getElementById('pace' + i);
+    var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+    // Check if loading is complete
+    if (  iframeDoc.readyState  == 'complete' ) {
+        //iframe.contentWindow.alert("Hello");
+        iframe.contentWindow.onload = function(){
+           
+        };
+        // The loading is complete, call the function we want executed once the iframe is loaded
+        c++
+    }
+}
+	if(c == n) {
+		ftc();
+		return;
+	}
+    // If we are here, it is not loaded. Set things up so we check   the status again in 100 milliseconds
+    window.setTimeout('checkIframeLoaded();', 100);
+}
+
 		function getParameterByName(name, url) {
     		if (!url) {
      			url = window.location.href;
@@ -56,12 +81,34 @@
 		for(var i = 0; i < n; i++) {
 			container.innerHTML += "<iframe src='experiment.html' id='pace" + i + "' style='height:426px; width:342px; display: inline-block; margin: 2px'></iframe>";
 		}
-		var genePool = new GenePool();
-		genePool.mutationRate = 0.4;
-		for(var  i = 0; i < n; i++) {
-			var gene = document.getElementById("pace" + i).contentWindow.pacGene;
-			genePool.genes.push(gene);
-		}
+
+		checkIframeLoaded(n, function() {
+			genePool = new GenePool();
+			genePool.mutationRate = 0.4;
+			for(var  i = 0; i < n; i++) {
+				var gene = document.getElementById("pace" + i).contentWindow.pacGene;
+				genePool.genes.push(gene);
+			}
+
+			setInterval(function() {
+			gen.innerHTML = "Generation: " + genePool.generation;
+			if(cint <= 0) {
+				cint = 1000;
+			}
+			evo.innerHTML = "Time Until Next Evolution: " + Math.floor(cint * (1/60)) + " s";
+			cint--;
+			for(var i = 0; i < genePool.genes.length; i++) {
+				avg += genePool.genes[i].fitness;
+				if(genePool.genes[i].fitness > bst) {
+					bst = genePool.genes[i].fitness;
+					bstindex = i
+				}
+			}
+			avg /= genePool.genes.length;
+
+		}, 1000/60);
+		})
+		
 
 		var bstindex = 0;
 		var bst = 0;

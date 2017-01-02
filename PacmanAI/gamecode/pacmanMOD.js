@@ -1012,7 +1012,8 @@ var PACMAN = (function () {
     
     return {
         "init" : init,
-        "keyDown" : keyDown
+        "keyDown" : keyDown,
+        "user" : function() {return user;}
     };
     
 }());

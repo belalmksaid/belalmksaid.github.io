@@ -30,6 +30,9 @@
 		<div id="pace" style="width:342px;"></div>
 		<script type="text/javascript">
 			PACMAN.init(document.getElementById("pace"), "./gamecode");
+			function resetScore() {
+				PACMAN.user().reset();
+			}
 			setInterval(function() {
 				if(STAT == 7 && MOD) {
 					var temp = new Array();

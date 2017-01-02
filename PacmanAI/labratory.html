@@ -95,6 +95,8 @@
 			if(cint <= 0) {
 				genePool.epoch(0.5);
 				for(var i = 0; i < genePool.genes.length; i++) {
+					document.getElementById("pace" + i).contentWindow.resetScore();
+					document.getElementById("pace" + i).contentWindow.FITNESS = 0;
 					document.getElementById("pace" + i).contentWindow.pacGene = genePool.genes[i];
 					document.getElementById("pace" + i).contentWindow.pacBrain.putWeights(genePool.genes[i].weights);
 				}

@@ -173,8 +173,7 @@ function GenePool() {
 		midway = old.length - midway;
 		console.log(old);
 		for(var i = midway; i < old.length; i++) {
-			this.genes.push(old[old.length - i - 1].clone());
-			console.log(this.genes[this.genes.length - 1].fitness);
+			this.genes.push(old[i].clone());
 			this.genes[this.genes.length - 1].fitness = 0;
 		}
 		var original = this.genes.length;

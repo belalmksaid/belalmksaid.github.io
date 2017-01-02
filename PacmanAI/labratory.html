@@ -75,7 +75,8 @@
     		if (!results[2]) return '';
     		return decodeURIComponent(results[2].replace(/\+/g, " "));
 		}
-		var n = parseInt(getParameterByName("n"));
+		var n = 16;
+		n = parseInt(getParameterByName("n"));
 		var c = 2000;
 		c = parseInt(getParameterByName("t")) * 60;
 		var cint = c;

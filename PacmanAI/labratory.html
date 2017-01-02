@@ -76,7 +76,8 @@
     		return decodeURIComponent(results[2].replace(/\+/g, " "));
 		}
 		var n = parseInt(getParameterByName("n"));
-		var c = parseInt(getParameterByName("t")) * 60;
+		var c = 2000;
+		c = parseInt(getParameterByName("t")) * 60;
 		var cint = c;
 		for(var i = 0; i < n; i++) {
 			container.innerHTML += "<iframe src='experiment.html' id='pace" + i + "' style='height:426px; width:342px; display: inline-block; margin: 2px'></iframe>";

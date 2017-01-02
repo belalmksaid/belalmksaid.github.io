@@ -309,7 +309,7 @@ Pacman.User = function (game, map) {
         keyMap    = {};
 
     position  = null;
-    direction = null;
+    direction = null;   
     
     keyMap[KEY.ARROW_LEFT]  = LEFT;
     keyMap[KEY.ARROW_UP]    = UP;

@@ -62,7 +62,7 @@
 		return;
 	}
     // If we are here, it is not loaded. Set things up so we check   the status again in 100 milliseconds
-    window.setTimeout('checkIframeLoaded();', 100);
+    window.setTimeout('checkIframeLoaded(n, ftc);', 100);
 }
 
 		function getParameterByName(name, url) {
@@ -81,7 +81,7 @@
 		for(var i = 0; i < n; i++) {
 			container.innerHTML += "<iframe src='experiment.html' id='pace" + i + "' style='height:426px; width:342px; display: inline-block; margin: 2px'></iframe>";
 		}
-
+		window.setTimeout(function() {
 		checkIframeLoaded(n, function() {
 			genePool = new GenePool();
 			genePool.mutationRate = 0.4;
@@ -108,7 +108,8 @@
 			avg /= genePool.genes.length;
 
 		}, 1000/60);*/
-		})
+		});
+	}, 1000);
 		
 
 		var bstindex = 0;

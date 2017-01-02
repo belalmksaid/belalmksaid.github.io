@@ -180,12 +180,11 @@ function GenePool() {
 		for(var i = 0; i < old.length ; i++) {
 			if(old[i].fitness > avg) {
 				this.genes.push(old[i].clone());
+				console.log(his.genes[this.genes.length - 1].fitness);
 				this.mutate(this.genes[this.genes.length - 1].weights);
 				this.genes[this.genes.length - 1].fitness = 0;
 			}
 		}
-		console.log(avg);
-		console.log(this.genes);
 		if(this.genes.length / old.length > elite) {
 			this.genes.splice(0, Math.floor(this.genes.length - elite * old.length));
 		}

@@ -128,7 +128,7 @@ function GenePool() {
 	this.genes = new Array();
 	this.mutationRate = 0.3;
 	this.crossOverRate = 0.8;
-	this.radiationRate = 0.01;
+	this.radiationRate = 0.005;
 	this.generation = 0;
 	this.mutate = function(w) {
 		for(var i = 0; i < w.length; i++) {
@@ -174,6 +174,7 @@ function GenePool() {
 
 		for(var i = midway; i < old.length; i++) {
 			this.genes.push(old[old.length - i - 1].clone());
+			console.log(this.genes[this.genes.length - 1].fitness);
 			this.genes[this.genes.length - 1].fitness = 0;
 		}
 		var original = this.genes.length;

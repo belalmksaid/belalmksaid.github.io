@@ -15,6 +15,10 @@
  D = 0;
  ISV = 0;
  LOC = new Array();
+ GI = 0;
+ GB = 0;
+ ID = -1;
+ BD = -1;
  STAT = 0;
  MOD = false;
  FITNESS = 0;
@@ -35,12 +39,13 @@ var NONE        = 4,
 
 Pacman.FPS = 30;
 
-Pacman.Ghost = function (game, map, colour) {
+Pacman.Ghost = function (game, map, colour, n) {
 
     var position  = null,
         direction = null,
         eatable   = null,
         eaten     = null,
+        num = n,
         due       = null;
     
     function getNewCoord(dir, current) { 
@@ -297,13 +302,14 @@ Pacman.Ghost = function (game, map, colour) {
 
 Pacman.User = function (game, map) {
     
-    var position  = null,
-        direction = null,
-        eaten     = null,
+    var eaten     = null,
         due       = null, 
         lives     = null,
         score     = 5,
         keyMap    = {};
+
+    position  = null;
+    direction = null;
     
     keyMap[KEY.ARROW_LEFT]  = LEFT;
     keyMap[KEY.ARROW_UP]    = UP;
@@ -324,6 +330,8 @@ Pacman.User = function (game, map) {
 
     function loseLife() { 
         FITNESS -= 100;
+        lives -= 1;
+        if(lives == 0) FITNESS -= 1000;
     };
 
     function getLives() {
@@ -515,7 +523,7 @@ Pacman.User = function (game, map) {
     };
 
     function draw(ctx) { 
-
+        FITNESS -= 0.1;
         var s     = map.blockSize, 
             angle = calcAngle(direction, position);
 
@@ -714,7 +722,6 @@ Pacman.Map = function (size) {
 var PACMAN = (function () {
 
     var state        = WAITING,
-        ghosts       = [],
         ghostSpecs   = ["#00FFDE", "#FF0000", "#FFB8DE", "#FFB847"],
         eatenCount   = 0,
         level        = 0,
@@ -729,6 +736,7 @@ var PACMAN = (function () {
         user         = null,
         stored       = null;
 
+    ghosts = [];
     function getTick() { 
         return tick;
     };
@@ -865,8 +873,8 @@ var PACMAN = (function () {
         
         for (i = 0, len = ghosts.length; i < len; i += 1) {
             ghosts[i].draw(ctx);
-            LOC.push(ghosts[i].position().x);
-            LOC.push(ghosts[i].position().y);
+            LOC.push(Math.round(ghosts[i].position().x / 10));
+            LOC.push(Math.round(ghosts[i].position().y / 10));
         }
         FITNESS-=0.5;                     
         user.draw(ctx);
@@ -984,7 +992,7 @@ var PACMAN = (function () {
         }, map);
 
         for (i = 0, len = ghostSpecs.length; i < len; i += 1) {
-            ghost = new Pacman.Ghost({"getTick":getTick}, map, ghostSpecs[i]);
+            ghost = new Pacman.Ghost({"getTick":getTick}, map, ghostSpecs[i], i);
             ghosts.push(ghost);
         }
         

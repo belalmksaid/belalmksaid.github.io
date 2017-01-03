@@ -1,0 +1,224 @@
+<html>
+<head>
+	<style type="text/css">
+		* 
+		{
+			font-family: "Courier";
+		}
+		#controlPanel
+		{
+			width: 100%; 
+			border-spacing: 20px;
+		}
+		#controlPanel td
+		{
+			width: 25%;
+			vertical-align: top;
+		}
+	</style>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="neuralnetwork.js"></script>
+	<script type="text/javascript" src="disquemath.js"></script>
+	<script type="text/javascript" src="PacBotSim.js"></script>
+</head>
+<body>
+	<h1 style="text-align: center">
+		PacBot Training Lab
+	</h1>
+	<div>
+		<table id="controlPanel">
+			<tr>
+				<td>
+					Number Of Layers: <select id="layersOp">
+					<option value="1" selected>1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>		
+			</td>
+			<td id="neuronsOp">
+				Neruons Per Layer:<select>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6" selected>6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+			</select>		
+		</td>
+		<td type="dynamic">
+			<p text="Mutation Rate: " unit="">Mutation Rate: 0.3</p>
+			<input type="range" value="0.3" min="0.1" max="1" step="0.01" style="width: 100%" bind="mrate"/>
+		</td>
+		<td type="dynamic">
+			<p text="Crossover Rate: " unit="">Crossover Rate: 0.8</p>
+			<input type="range" value="0.8" min="0.1" max="1" step="0.01" style="width: 100%" bind="crate"/>
+		</td>
+	</tr>
+	<tr>
+		<td type="dynamic">
+			<p text="Elitism: " unit="">Elitism: 0.5</p>
+			<input type="range" value="0.5" min="0.1" max="0.9" step="0.1" style="width: 100%" bind="erate"/>
+		</td>
+		<td type="dynamic"><p text="Initial Generation Time: " unit="s">Initial Generation Time: 20 s</p>
+			<input type="range" value="20" min="10" max="1000" step="1" style="width: 100%" bind="initTime"/></td>
+			<td type="dynamic"><p text="Target Generation Time: " unit="s">Target Generation Time: 20 s</p>
+				<input type="range" value="20" min="10" max="1000" step="1" style="width: 100%" bind="targTime"/></td>
+
+				<td type="dynamic">
+					<p text="Size of Gene Pool: " unit="">Size of Gene Pool: 20</p>
+					<input type="range" value="20" min="10" max="100" step="1" style="width: 100%" bind="poolSize"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<fieldset>
+						<legend>Reward for:</legend>
+						<input type="checkbox" bind="eatingPelletsC"/>Eating Pellets<br />
+						<input type="checkbox" bind="movingC" />Moving<br />
+						<input type="checkbox" bind="finishQC" />Finishing Quickly<br />
+					</fieldset>
+				</td>
+				<td>
+					<fieldset>
+						<legend>Punish for:</legend>
+						<input type="checkbox" bind="eatenC"/>Being Eaten<br />
+						<input type="checkbox" bind="hitWallsC" />Hitting Walls<br />
+						<input type="checkbox" bind="loseGameC" />Losing the Game<br />
+					</fieldset>
+				</td>
+				<td colspan="2">
+					<fieldset>
+						<legend>Controls:</legend>
+						<button id="epochStatusButton">Stop Evolving</button>
+						<button>Get Best Genome</button>
+						<button>Insert Genome</button>
+						<button id="stateButton">Pause</button>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<fieldset id="statusText">
+						<legend>Status:</legend>
+						<table style="width: 100%">
+							<tr>
+								<td><p text="Generation: 0">Generation: 0</p></td>
+								<td><p text="Average Fitness: ">Average Fitness: 0</p></td>
+								<td><p text="Best Fitness: ">Best Fitness: 0</p></td>
+								<td><p text="Next Generation: ">Next Generation in: 0 s</p></td>
+							</tr>
+						</table>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: right" colspan="4">
+					<button id="startMachine">Create Experiment</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="tube"></div>
+	<script type="text/javascript">
+		// Condition Vars
+		var conditions = {eatingPelletsC : 0, movingC : 0, finishQC : 0, eatenC : 0, hitWallsC : 0, loseGameC : 0, crate: 0, erate:0, mrate: 0, initTime: 0, targTime : 0, poolSize : 0, npr: 0, layers: 0 };
+		var status = 1;
+		var epochStatus = 1;
+		var experiments = new Array();
+		var threads = new Array();
+		var genePool = new GenePool();
+		C = null;
+		//initialize
+		$(tube).css({
+			"min-width" : PACBOT.CONSTANTS.Width + "px"
+		});
+		var dynamics = $("td[type='dynamic']").children();
+		for(var i = 0; i < dynamics.length; i+=2) {
+			$(dynamics[i + 1]).on("input change", function (event) {
+				var ele = $(event.target).parent().children()[0];
+				$(ele).text(ele.getAttribute("text") + $(event.target).val() + " " + ele.getAttribute("unit"));
+			});
+		}
+		$(startMachine).on("click", function() {
+			var allc = $("input[type='checkbox']");
+			for(var  i = 0; i < allc.length; i++) {
+				conditions[allc[i].getAttribute("bind")] = allc[i].checked ? true : false;
+			}
+			var vcon = $("input[type='range']");
+			for(var  i = 0; i < vcon.length; i++) {
+				conditions[vcon[i].getAttribute("bind")] = parseFloat(vcon[i].value);
+			}
+			conditions.npr = parseInt($(neuronsOp).find(":selected").text());
+			conditions.layers = parseInt($(layersOp).find(":selected").text());
+			tube.innerHTML = "";
+			for(var i = 0; i < threads.length; i++) {
+				clearInterval(threads[i]);
+			}
+			threads.length = 0;
+			experiments.length = 0;
+			genePool.genes.length = 0;
+			genePool.mutationRate = conditions.mrate;
+			genePool.crossoverRate = conditions.crate;
+			genePool.elite = conditions.erate;
+			var nh = Math.floor($(tube).width() / PACBOT.CONSTANTS.Width);
+			var nv = Math.ceil(conditions.poolSize / nh);
+			var canv = $("<canvas id='drawingBoard'>");
+			canv.attr("width", nh * PACBOT.CONSTANTS.Width);
+			canv.attr("height", nv * PACBOT.CONSTANTS.Height);
+			$(tube).append(canv);
+			C = document.getElementById("drawingBoard").getContext('2d');
+			for(var i = 0; i < nv; i++) {
+				for(var j = 0; j < nh; j++) {
+					if(nh * i + j + 1 <= conditions.poolSize) {
+						experiments.push(new PacBotGame(C, v(j * PACBOT.CONSTANTS.Width, i * PACBOT.CONSTANTS.Height), new NeuralNetwork(15, 2, conditions.layers, conditions.npr), PACBOT.MainMap));
+						experiments[experiments.length - 1].brain.create();
+						genePool.genes.push(new gene(experiments[experiments.length - 1].brain.getWeights(), 0));
+				    }
+				}
+			}
+			for(var i = 0; i < conditions.poolSize; i++) {
+				eval("threads[" + i + "] = setInterval(function() { experiments[" + i + "].update();}, PACBOT.CONSTANTS.FrameRate);");
+			}
+		});
+		$(stateButton).on("click", function() {
+			if(status == 1) {
+				status = 0;
+				$(stateButton).text("Play");
+			}
+			else {
+				status = 1;
+				$(stateButton).text("Pause");
+			}
+		});
+		$(epochStatusButton).on("click", function() {
+			if(epochStatus == 1) {
+				epochStatus = 0;
+				$(epochStatusButton).text("Continue Evolving");
+			}
+			else {
+				epochStatus = 1;
+				$(epochStatusButton).text("Stop Evolving");
+			}
+		});
+		$(window).resize(function() {
+			var nh = Math.floor($(tube).width() / PACBOT.CONSTANTS.Width);
+			var nv = Math.ceil(conditions.poolSize / nh);
+			var canv = $("#drawingBoard");
+			if(canv.length > 0) {
+				canv.attr("width", Math.floor($(tube).width()));
+				canv.attr("height", nv * PACBOT.CONSTANTS.Height);
+				for(var i = 0; i < nv; i++) {
+				for(var j = 0; j < nh; j++) {
+					if(nh * i + j + 1 <= conditions.poolSize) {
+					experiments[nh * i + j].start =  v(j * PACBOT.CONSTANTS.Width, i * PACBOT.CONSTANTS.Height);
+					experiments[nh * i + j].drawMap();
+				}
+				}
+			}
+			}
+
+		});
+	</script>
+</body>
+</html>

@@ -163,19 +163,14 @@
 			genePool.elite = conditions.erate;
 			var nh = Math.floor($(tube).width() / PACBOT.CONSTANTS.Width);
 			var nv = Math.ceil(conditions.poolSize / nh);
-			var canv = $("<canvas id='drawingBoard'>");
-			canv.attr("width", nh * PACBOT.CONSTANTS.Width);
-			canv.attr("height", nv * PACBOT.CONSTANTS.Height);
-			$(tube).append(canv);
-			C = document.getElementById("drawingBoard").getContext('2d');
-			for(var i = 0; i < nv; i++) {
-				for(var j = 0; j < nh; j++) {
-					if(nh * i + j + 1 <= conditions.poolSize) {
-						experiments.push(new PacBotGame(C, v(j * PACBOT.CONSTANTS.Width, i * PACBOT.CONSTANTS.Height), new NeuralNetwork(15, 2, conditions.layers, conditions.npr), PACBOT.MainMap));
-						experiments[experiments.length - 1].brain.create();
-						genePool.genes.push(new gene(experiments[experiments.length - 1].brain.getWeights(), 0));
-				    }
-				}
+			for(var i = 0; i < conditions.poolSize; i++) {
+				var canv = $("<canvas id='drawingBoard" + i + "'>");
+				canv.attr("width", PACBOT.CONSTANTS.Width);
+				canv.attr("height", PACBOT.CONSTANTS.Height);
+				$(tube).append(canv);
+				experiments.push(new PacBotGame(canv[0].getContext('2d'), v(0, 0), new NeuralNetwork(15, 2, conditions.layers, conditions.npr), PACBOT.MainMap));
+				experiments[experiments.length - 1].brain.create();
+				genePool.genes.push(new gene(experiments[experiments.length - 1].brain.getWeights(), 0));
 			}
 			for(var i = 0; i < conditions.poolSize; i++) {
 				eval("threads[" + i + "] = setInterval(function() { experiments[" + i + "].update();}, PACBOT.CONSTANTS.FrameRate);");
@@ -201,7 +196,7 @@
 				$(epochStatusButton).text("Stop Evolving");
 			}
 		});
-		$(window).resize(function() {
+		/*$(window).resize(function() {
 			var nh = Math.floor($(tube).width() / PACBOT.CONSTANTS.Width);
 			var nv = Math.ceil(conditions.poolSize / nh);
 			var canv = $("#drawingBoard");
@@ -218,7 +213,7 @@
 			}
 			}
 
-		});
+		});*/
 	</script>
 </body>
 </html>

@@ -45,6 +45,8 @@ var PACBOT = {
 		Escape: 2
 	},
 	WallPunishment: -1,
+	DeathPunishment: -200,
+	PelletReward: 10,
 	ScatterTime: 1000 * 7
 }
 
@@ -116,6 +118,21 @@ function getNearbyWalls(x, y, map) {
 	}
 	return r;
 }
+function getClosestWallsSorted(x, y, map) {
+	var wall = PACBOT.MAP.Wall;
+	var cw = PACBOT.CONSTANTS.Width / PACBOT.CONSTANTS.Cells;
+	var r = new Array();
+	for(var i = 0; i < map.length; i++) {
+		for(var j = 0; j < map.length; j++) {
+			if(map[i][j] == wall) {
+				var ce = v(j * cw + cw / 2, i * cw + cw / 2);
+				r.push({ pos : ce, width: cw, d: (ce.x - x) * (ce.x - x) + (ce.y - y) * (ce.y - y) });
+			}
+		}
+	}
+	r.sort(function(a, b) { return a.d - b.d; });
+	return r;
+}
 
 function getDirection(v1, v2) {
 	var dy = v2.y - v1.y;
@@ -137,17 +154,25 @@ function PacBot() {
 	this.initialPosition = v(0, 0);
 	this.memory = [0, 0, 0, 0];
 	this.resolveWallCollisions = function(p) {
-		var bp = getBlockCoor(this.position.x, this.position.y);
-		var walls = getNearbyWalls(bp.x, bp.y, p.map), x, y, w = PACBOT.CONSTANTS.Width / PACBOT.CONSTANTS.Cells;
+		var walls = getClosestWallsSorted(this.position.x, this.position.y, p.map), x, y, w = PACBOT.CONSTANTS.Width / PACBOT.CONSTANTS.Cells;
 		var hasCollision = false;
-		for(var i = 0; i < walls.length; i++) {
-			x = walls[i].x * w + w / 2;
-			y = walls[i].y * w + w / 2;
+		for(var i = 0; i < 10; i++) {
+			x = walls[i].pos.x;
+			y = walls[i].pos.y;
 			var r = w / 2 + this.radius;
 			if (Math.abs(x - this.position.x) < r && Math.abs(y - this.position.y) < r) {
 				hasCollision = true;
-				this.position.x += (r - Math.abs(x - this.position.x)) * -Disque.sign(x - this.position.x);// * Math.cos(this.orientation);
-				this.position.y += (r - Math.abs(y - this.position.y)) * -Disque.sign(y - this.position.y);// * Math.sin(this.orientation);
+				var cv = v(0, 0);
+				cv.x = (r - Math.abs(x - this.position.x)) * Disque.sign(x - this.position.x);
+				cv.y = (r - Math.abs(y - this.position.y)) * Disque.sign(y - this.position.y);
+				//var or = v(Math.cos(this.orientation), Math.sin(this.orientation));
+				//var res = Disque.dot(cv, or) / (or.length() * or.length());
+				//console.log(res);
+				//or = or.normalize().scale(-res);
+				//console.log(or);
+				//console.log("-----");
+				this.position.x += cv.x * -1;
+				this.position.y += cv.y * -1;
 			}
 		}
 		if(this.position.x < this.radius) {
@@ -169,14 +194,24 @@ function PacBot() {
 		if(hasCollision)
 			p.fitness += PACBOT.WallPunishment;
 	}
+	this.reset = function() {
+		this.position = this.initialPosition.clone();
+		this.orientation = 0;
+	}
 	this.update = function(p) {
-		var c = p.context;
-		this.resolveWallCollisions(p);
+		var c = p.context;	
 		var input = this.memory.slice(0);
+		var bc = getBlockCoor(this.position.x, this.position.y);
 		for(var i = 0; i < p.ghosts.length; i++) {
 			var rb = getBlockCoor(p.ghosts[i].position.x, p.ghosts[i].position.y);
 			input.push(rb.x);
 			input.push(rb.y);
+			if(bc.x == rb.x && bc.y == rb.y) {
+				p.lives--;
+				p.fitness += PACBOT.DeathPunishment;
+				p.reset();
+				return;
+			}
 		}
 		input.push(0);
 		input.push(0);
@@ -192,6 +227,7 @@ function PacBot() {
 		this.memory = op.splice(2, 4);
 		this.position.x += this.speed * (p.dt / 1000.0) * Math.cos(this.orientation);
 		this.position.y += this.speed * (p.dt / 1000.0) * Math.sin(this.orientation);
+		this.resolveWallCollisions(p);
 	}
 	this.draw = function(c, s) {
 		drawCircle(c, this.position.x + s.x, this.position.y + s.y, this.radius, this.orientation, this.color);
@@ -214,8 +250,11 @@ function GhostBot(n, c) {
 	this.speed = PACBOT.CONSTANTS.Width / (PACBOT.CONSTANTS.Cells * 7) * 12.0;
 	this.direction = PACBOT.Directions.Right;
 	this.reset = function() {
-		this.position = this.initialPosition;
-		this.target = this.originaltarget;
+		this.position = this.initialPosition.clone();
+		this.target = this.originaltarget.clone();
+		this.targetPosition = null;
+		this.orientation = 0;
+		this.scatterTimer = PACBOT.ScatterTime;
 	}
 	this.update = function(p) {
 		var c = p.context;
@@ -326,12 +365,15 @@ function PacBotGame(context, start, brain, map) {
 		}
 	}
 	this.reset = function() {
-		this.pacBot.position = this.pacBot.initialPosition;
+		this.pacBot.reset();
 		for(var i = 0; i < this.ghosts.length; i++) {
 			this.ghosts[i].reset();
 		}
 	}
 	this.reset();
+	this.resetAll = function() {
+		this.reset();
+	}
 	this.drawBorder = function() {
 		this.context.strokeRect(0,0, PACBOT.CONSTANTS.Width, PACBOT.CONSTANTS.Width);
 	}
@@ -349,7 +391,7 @@ function PacBotGame(context, start, brain, map) {
 		this.state = 1;
 	}
 	this.update = function() {
-		if(this.state == 1) {
+		if(this.state == 1 &&  this.lives > 0) {
 			var nnow = Date.now();
 			if(this.now == 0) {
 				this.now = nnow - PACBOT.CONSTANTS.FrameRate;
@@ -364,6 +406,9 @@ function PacBotGame(context, start, brain, map) {
 			this.ghosts[3].update(this);
 
 			this.draw(this.context);
+		}
+		else {
+			this.now = 0;
 		}
 	}
 	this.draw = function(c) {

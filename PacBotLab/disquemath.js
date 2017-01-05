@@ -11,7 +11,7 @@ function vector(x, y) {
 		return addv(this, b.scale(-1));
 	}
 	this.clone = function() {
-		return v(this.x, this. y);
+		return v(this.x, this.y);
 	}
 	this.length = function() {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -58,6 +58,9 @@ var Disque = {
 		if(s > 0) return 1;
 		if(s < 0) return -1;
 		return 0;
+	},
+	dot: function(a, b) {
+		return a.x * b.x + a.y * b.y;
 	},
 	epsilon: 1
 };

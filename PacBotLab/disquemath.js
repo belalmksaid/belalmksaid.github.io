@@ -53,5 +53,11 @@ function ZERO() {
 var Disque = {
 	random: function(min, max) {
 		return (Math.random() * (max - min) + min);
-	}
+	},
+	sign: function(s) {
+		if(s > 0) return 1;
+		if(s < 0) return -1;
+		return 0;
+	},
+	epsilon: 1
 };

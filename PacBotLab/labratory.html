@@ -104,7 +104,7 @@
 						<legend>Status:</legend>
 						<table style="width: 100%">
 							<tr>
-								<td><p text="Generation: 0" id="gener">Generation: 0</p></td>
+								<td><p text="Generation: " id="gener">Generation: 0</p></td>
 								<td><p text="Average Fitness: ">Average Fitness: 0</p></td>
 								<td><p text="Best Fitness: ">Best Fitness: 0</p></td>
 							</tr>
@@ -159,6 +159,7 @@
 			threads.length = 0;
 			experiments.length = 0;
 			genePool.genes.length = 0;
+			genePool.generation = 0;
 			genePool.mutationRate = conditions.mrate;
 			genePool.crossoverRate = conditions.crate;
 			genePool.elite = conditions.erate;
@@ -174,7 +175,7 @@
 				genePool.genes.push(new gene(experiments[experiments.length - 1].brain.getWeights(), 0));
 			}
 			for(var i = 0; i < conditions.poolSize; i++) {
-				eval("threads[" + i + "] = setInterval(function() { experiments[" + i + "].update(); if(experiments[" + i + "].lives == 0) {dead++; cleanUp();}}, PACBOT.CONSTANTS.FrameRate);");
+				eval("threads[" + i + "] = setInterval(function() { experiments[" + i + "].update(); if(experiments[" + i + "].lives == 0) {dead++; if(dead == conditions.poolSize) {cleanUp();}}}, 1);");
 			}
 		});
 		$(stateButton).on("click", function() {
@@ -205,6 +206,7 @@
 			}
 		}
 		function cleanUp() {
+			dead = 0;
 			console.log("Clean up started.");
 			statusI(0);
 			for(var i = 0; i < experiments.length; i++) {
@@ -216,10 +218,9 @@
 				experiments[i].fitness = 0;
 				experiments[i].resetAll();
 			}
-			dead = 0;
 			statusI(1);
 			console.log("Clean up ended.");
-			gene.innerHTML = gener.getAttribute("text") + genePool.generation;
+			gener.innerHTML = gener.getAttribute("text") + genePool.generation;
 		}
 		/*$(window).resize(function() {
 			var nh = Math.floor($(tube).width() / PACBOT.CONSTANTS.Width);

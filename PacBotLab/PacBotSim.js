@@ -3,7 +3,8 @@ var PACBOT = {
 		Width: 300,
 		Height: 350,
 		FrameRate: 1000/60,
-		Cells: 15
+		Cells: 15,
+		CellWidth: 300 / 15
 	},
 	MainMap : 
 	[ [110,1,1,1,1,1,1,0,1,1,1,1,1,1,440],
@@ -24,7 +25,9 @@ var PACBOT = {
 	MAP : {
 		Wall : 0,
 		Empty: 1,
-		BlockColor: new color(0, 0, 0)
+		BlockColor: new color(0, 0, 0),
+		PelletColor: new color(0, 0, 0),
+		Pellet: 6
 	},
 	Ghosts: {
 		Red: 11,
@@ -67,6 +70,8 @@ function drawCircle(c, x, y, rad, orie, col) {
 	c.stroke();
 	c.restore();
 }
+
+
 
 function drawRectangle(c, x, y, w, h, col) {
 	c.fillStyle = "rgb(" + col.r +"," + col.g + "," + col.b + ")";
@@ -143,6 +148,19 @@ function getDirection(v1, v2) {
 	if(Math.abs(dx) > 0) {
 		return dx > 0 ? PACBOT.Directions.Right : PACBOT.Directions.Left;
 	}
+}
+
+function createPelletMap(map) {
+	var pmap = new Array();
+	for(var i = 0; i < map.length; i++) {
+		pmap.push(map[i].slice(0));
+		for(var j = 0; j < map[i].length; j++) {
+			if(pmap[i][j] == 1) {
+				pmap[i][j] = 6;
+			}
+		}
+	}
+	return pmap;
 }
 
 function PacBot() {
@@ -223,7 +241,7 @@ function PacBot() {
 		input.push(p.dt);
 		var op = p.brain.update(input);
 		this.speed = op[0] * 100;
-		this.orientation += op[1] * 0.1;
+		this.orientation = op[1] * 2 * Math.PI;
 		this.memory = op.splice(2, 4);
 		this.position.x += this.speed * (p.dt / 1000.0) * Math.cos(this.orientation);
 		this.position.y += this.speed * (p.dt / 1000.0) * Math.sin(this.orientation);
@@ -315,6 +333,40 @@ function Block(start, w, h, color) {
 	}
 }
 
+function drawPellet(c, x, y) {
+	c.save();
+	c.beginPath();
+	c.arc(x, y, PACBOT.CONSTANTS.CellWidth * 0.2, 0, 2 * Math.PI, false);
+	c.fillStyle = "rgb(" + PACBOT.MAP.PelletColor.r +"," + PACBOT.MAP.PelletColor.g + "," + PACBOT.MAP.PelletColor.b + ")";
+	c.fill();
+	c.closePath();	
+	c.restore();
+}
+
+function Pellet(x, y, map) {
+	this.x = x;
+	this.y = y;
+	this.map = map;
+	this.draw = function(p) {
+		if(this.map[this.y][this.x] == PACBOT.MAP.Pellet) {
+			drawPellet(p.context, this.x * PACBOT.CONSTANTS.CellWidth + PACBOT.CONSTANTS.CellWidth / 2, this.y * PACBOT.CONSTANTS.CellWidth + PACBOT.CONSTANTS.CellWidth / 2);
+		}
+	}
+}
+
+function getPelletMap(map) {
+	var pmap = new Array();
+	for(var i = 0; i < map.length; i++) {
+		pmap.push(map[i].slice(0));
+		for(var j = 0; j < map[i].length; j++) {
+			if(map[i][j] != PACBOT.MAP.Wall) {
+				pmap[i][j] = PACBOT.MAP.Pellet;
+			}
+		}
+	}
+	return pmap;
+}
+
 function PacBotGame(context, start, brain, map) {
 	this.now = 0;
 	this.dt = PACBOT.CONSTANTS.FrameRate;
@@ -325,10 +377,13 @@ function PacBotGame(context, start, brain, map) {
 	this.fitness = 0;
 	this.lives = 3;
 	this.map = map;
+	this.hasDraw = true;
+	this.pelletMap = getPelletMap(map);
 	this.ghostState = 0;
 	this.pacBot = new PacBot();
 	this.ghosts = [new GhostBot(PACBOT.Ghosts.Red, new color(255, 0, 0)), new GhostBot(2, new color(0, 255, 255)), new GhostBot(3, new color(255, 105, 180)), new GhostBot(44, new color(255, 165, 0))];
 	this.blocks = new Array();
+	this.rate = 1;
 	var cw = PACBOT.CONSTANTS.Width / PACBOT.CONSTANTS.Cells;
 	for(var i = 0; i < this.map.length; i++) {
 		for(var j = 0; j < this.map[i].length; j++) {
@@ -362,6 +417,9 @@ function PacBotGame(context, start, brain, map) {
 			else if(this.map[i][j] == PACBOT.Ghosts.Cyan * 10) {
 				this.ghosts[1].originaltarget = v(j, i);
 			}
+			if(this.map[i][j] != PACBOT.MAP.Wall) {
+				this.blocks.push(new Pellet(j, i, this.pelletMap));
+			}
 		}
 	}
 	this.reset = function() {
@@ -373,15 +431,16 @@ function PacBotGame(context, start, brain, map) {
 	this.reset();
 	this.resetAll = function() {
 		this.reset();
+		this.lives = 3;
 	}
 	this.drawBorder = function() {
 		this.context.strokeRect(0,0, PACBOT.CONSTANTS.Width, PACBOT.CONSTANTS.Width);
 	}
 	this.drawMap = function() {
 		this.drawBorder();
-		for(var  i = 0; i < this.blocks.length; i++) {
+		for(var i = 0; i < this.blocks.length; i++) {
 			this.blocks[i].draw(this);
-		}	
+		}
 	}
 	this.pause = function() {
 		this.state = 0;
@@ -392,20 +451,21 @@ function PacBotGame(context, start, brain, map) {
 	}
 	this.update = function() {
 		if(this.state == 1 &&  this.lives > 0) {
-			var nnow = Date.now();
+			/*var nnow = Date.now();
 			if(this.now == 0) {
 				this.now = nnow - PACBOT.CONSTANTS.FrameRate;
 			}
 			this.dt = nnow - this.now;
-			this.now = nnow;
-
+			this.now = nnow;*/
+			this.dt = PACBOT.CONSTANTS.FrameRate * this.rate;
 			this.pacBot.update(this);
 			this.ghosts[0].update(this);
 			this.ghosts[1].update(this);
 			this.ghosts[2].update(this);
 			this.ghosts[3].update(this);
-
-			this.draw(this.context);
+			if(this.hasDraw) { 
+				this.draw(this.context);
+			}
 		}
 		else {
 			this.now = 0;

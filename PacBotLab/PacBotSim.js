@@ -42,7 +42,8 @@ var PACBOT = {
 		Left: -1,
 		Right: 1,
 		Up: -2,
-		Down: 2
+		Down: 2,
+		Array: [-1, 1, -2, 2]
 	},
 	States: {
 		Scatter: 0,
@@ -120,6 +121,7 @@ function getNearbyWalls(x, y, map) {
 	}
 	return r;
 }
+
 function getClosestWallsSorted(x, y, map) {
 	var wall = PACBOT.MAP.Wall;
 	var cw = PACBOT.CONSTANTS.Width / PACBOT.CONSTANTS.Cells;
@@ -177,29 +179,55 @@ function getNextWall(x, y, direction, map) {
 	}
 }
 
+function isEmpty(x, y, direction, map) {
+	if(Math.abs(direction) == 1) {
+		if(x == 0 && Disque.sign(direction) == -1 || x == PACBOT.CONSTANTS.Cells - 1 && Disque.sign(direction) == 1) return false; 
+		if(map[y][x + Disque.sign(direction)] != PACBOT.MAP.Wall) {
+			return [true, v(x + Disque.sign(direction), y)];
+		}
+		return false;
+	}
+	else {
+		if(y == 0 && Disque.sign(direction) == -1 || y == PACBOT.CONSTANTS.Cells - 1 && Disque.sign(direction) == 1) return false; 
+		if(map[y  + Disque.sign(direction)][x] != PACBOT.MAP.Wall) {
+			return [true, v(x, y + Disque.sign(direction))];
+		}
+		return false;
+	}
+
+}
+
 function getDistance(v, w) {
 	w.x = (w.x + 0.5) * PACBOT.CONSTANTS.CellWidth;
 	w.y =  (w.y + 0.5) * PACBOT.CONSTANTS.CellWidth;
 	return Math.sqrt((w.x - v.x) * (w.x - v.x) + (w.y - v.y) * (w.y - v.y)) - PACBOT.CONSTANTS.CellWidth / 2;
 }
 
-function getDistanceFromEdge(v, direction) {
+function getDistanceFromEdge(c, direction) {
 	if(direction == PACBOT.Directions.Left) {
-		return getDistance(v, v(-1, v.y));
+		return getDistance(c, v(-1, v.y));
 	}
 	else if(direction == PACBOT.Directions.Right) {
-		return getDistance(v, v(PACBOT.CONSTANTS.Cells, v.y));
+		return getDistance(c, v(PACBOT.CONSTANTS.Cells, v.y));
 	}
 	if(direction == PACBOT.Directions.Up) {
-		return getDistance(v, v(v.x, -1));
+		return getDistance(c, v(v.x, -1));
 	}
-	return getDistance(v, v(v.x, PACBOT.CONSTANTS.Cells));
+	return getDistance(c, v(v.x, PACBOT.CONSTANTS.Cells));
 }
+
 function getPerpendicular(direction) {
 	if(Math.abs(direction) == 1)
 		return Math.sign(direction) * 2;
 	else 
 		return -Math.sign(direction);
+}
+
+function getOrientation(direction) {
+	if(direction == PACBOT.Directions.Right) return 0;
+	if(direction == PACBOT.Directions.Left) return Math.PI;
+	if(direction == PACBOT.Directions.Up) return Math.PI * 3 / 2;
+	if(direction == PACBOT.Directions.Down) return Math.PI / 2;
 }
 
 function PacBot() {
@@ -210,6 +238,7 @@ function PacBot() {
 	this.speed = 0;
 	this.initialPosition = v(0, 0);
 	this.memory = [0, 0, 0, 0];
+	this.target = v(0, 0);
 	this.direction = PACBOT.Directions.Right;
 	this.resolveWallCollisions = function(p) {
 		var walls = getClosestWallsSorted(this.position.x, this.position.y, p.map), x, y, w = PACBOT.CONSTANTS.Width / PACBOT.CONSTANTS.Cells;
@@ -292,10 +321,28 @@ function PacBot() {
 			p.drawMap();
 		}
 	}*/
+	this.turn = function(bc, direction, map, pos) {
+		var options = getNearbyEmpty(bc.x, bc.y, map);
+		var center = v((bc.x + 0.5) * PACBOT.CONSTANTS.CellWidth, (bc.y + 0.5) * PACBOT.CONSTANTS.CellWidth);
+		for(var i = 0; i < options.length; i++) {
+			if(getDirection(bc, options[i]) == direction) {
+				this.orientation = getOrientation(direction);
+				this.direction = direction;
+				return options[i];
+			}
+		}
+
+		this.fitness += PACBOT.WallPunishment;
+	}
+	this.move = function(p) {
+		this.position.x += this.speed * (p.dt / 1000.0) * Math.cos(this.orientation);
+		this.position.y += this.speed * (p.dt / 1000.0) * Math.sin(this.orientation);
+	}
 	this.update = function(p) {
 		var c = p.context;	
 		var input = this.memory.slice(0);
 		var bc = getBlockCoor(this.position.x, this.position.y);
+		var center = v((bc.x + 0.5) * PACBOT.CONSTANTS.CellWidth, (bc.y + 0.5) * PACBOT.CONSTANTS.CellWidth);
 		for(var i = 0; i < p.ghosts.length; i++) {
 			var rb = getBlockCoor(p.ghosts[i].position.x, p.ghosts[i].position.y);
 			input.push(rb.x);
@@ -328,7 +375,25 @@ function PacBot() {
 		input.push(backWall * PACBOT.CONSTANTS.InchpPixel);
 		input.push(rightWall * PACBOT.CONSTANTS.InchpPixel);
 		input.push(leftWall * PACBOT.CONSTANTS.InchpPixel);
-		//console.log(input);
+
+		input.push(this.speed / (PACBOT.CONSTANTS.Width/(PACBOT.CONSTANTS.Cells * 7)));
+		input.push(this.orientation);
+		input.push(p.ghostState);
+		input.push(p.dt);
+
+		var op = p.brain.update(input);
+		this.memory = op.splice(2, 4);
+		//console.log(PACBOT.Directions.Array[Math.floor(op[0] * 4)]);
+		
+		this.speed = op[1] * 100;
+		var emp = isEmpty(bc.x, bc.y, this.direction, p.map);
+		if(emp[0]) 
+			this.target = v((emp[1].x + 0.5) * PACBOT.CONSTANTS.CellWidth, (emp[1].y + 0.5) * PACBOT.CONSTANTS.CellWidth);
+		if(Math.abs(this.position.x - this.target.x) > Disque.epsilon || Math.abs(this.position.y - this.target.y) > Disque.epsilon)
+			this.move(p);
+		else
+			this.turn(bc, PACBOT.Directions.Array[Math.floor(op[0] * 4)], p.map, this.position);
+
 	}
 	this.draw = function(c, s) {
 		drawCircle(c, this.position.x + s.x, this.position.y + s.y, this.radius, this.orientation, this.color);

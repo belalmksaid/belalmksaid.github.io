@@ -100,6 +100,7 @@
 						<button>Get Best Genome</button>
 						<button>Insert Genome</button>
 						<button id="stateButton">Pause</button>
+						<button id="showgraph">Show Graph</button>
 					</fieldset>
 				</td>
 			</tr>
@@ -134,6 +135,7 @@
 		var threads = new Array();
 		var genePool = new GenePool();
 		var dead = 0;
+		var graphStatus = 0;
 		C = null;
 		//initialize
 		$(tube).css({
@@ -214,6 +216,23 @@
 				$(epochStatusButton).text("Stop Evolving");
 			}
 		});
+		$(showgraph).on("click", function() {
+			if(graphStatus == 0) {
+				$(showgraph).text("Hide Graph");
+				graphStatus = 1;
+				for(var i = 0; i < experiments.length; i++) {
+					experiments[i].hasDraw = false;
+				}
+			}
+			else {
+				$(showgraph).text("Show Graph");
+				graphStatus = 0;
+				for(var i = 0; i < experiments.length; i++) {
+					experiments[i].hasDraw = true;
+				}
+			}
+
+		});
 		function statusI(s) {
 			this.status = s;
 			for(var i = 0; i < experiments.length; i++) {
@@ -223,7 +242,7 @@
 		function cleanUp() {
 
 			dead = 0;
-			console.log("Clean up started.");
+			//console.log("Clean up started.");
 			statusI(0);
 			for(var i = 0; i < experiments.length; i++) {
 				genePool.genes[i].fitness = experiments[i].fitness;
@@ -239,7 +258,7 @@
 				}
 			}
 			statusI(1);
-			console.log("Clean up ended.");
+			//console.log("Clean up ended.");
 			gener.innerHTML = gener.getAttribute("text") + genePool.generation;
 		}
 		/*$(window).resize(function() {

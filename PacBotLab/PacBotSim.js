@@ -10,20 +10,20 @@ var PACBOT = {
 	},
 	MainMap : 
 	[ [110,1,1,1,1,1,1,0,1,1,1,1,1,1,440],
-	  [1,0,1,0,0,0,1,0,1,0,0,0,1,0,1],
-	  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-	  [1,0,1,0,1,0,0,0,0,0,1,0,1,0,1],
-	  [1,0,1,0,1,1,1,1,1,1,1,0,1,0,1],
-	  [1,1,1,0,1,0,0,11,0,0,1,0,1,1,1],
-	  [0,0,1,0,1,0,22,33,44,0,1,0,1,0,0],
-	  [0,0,1,1,1,0,0,0,0,0,1,1,1,0,0],
-	  [0,0,1,0,1,1,1,55,1,1,1,0,1,0,0],
-	  [1,1,1,0,1,0,0,0,0,0,1,0,1,1,1],
-	  [1,0,1,0,1,1,1,1,1,1,1,0,1,0,1],
-	  [1,0,1,0,1,0,0,0,0,0,1,0,1,0,1],
-	  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-	  [1,0,1,0,0,0,1,0,1,0,0,0,1,0,1],
-	  [220,1,1,1,1,1,1,0,1,1,1,1,1,1,330]],
+	[1,0,1,0,0,0,1,0,1,0,0,0,1,0,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,0,1,0,1,0,0,0,0,0,1,0,1,0,1],
+	[1,0,1,0,1,1,1,1,1,1,1,0,1,0,1],
+	[1,1,1,0,1,0,0,11,0,0,1,0,1,1,1],
+	[0,0,1,0,1,0,22,33,44,0,1,0,1,0,0],
+	[0,0,1,1,1,0,0,0,0,0,1,1,1,0,0],
+	[0,0,1,0,1,1,1,55,1,1,1,0,1,0,0],
+	[1,1,1,0,1,0,0,0,0,0,1,0,1,1,1],
+	[1,0,1,0,1,1,1,1,1,1,1,0,1,0,1],
+	[1,0,1,0,1,0,0,0,0,0,1,0,1,0,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,0,1,0,0,0,1,0,1,0,0,0,1,0,1],
+	[220,1,1,1,1,1,1,0,1,1,1,1,1,1,330]],
 	MAP : {
 		Wall : 0,
 		Empty: 1,
@@ -50,8 +50,8 @@ var PACBOT = {
 		Chase: 1,
 		Escape: 2
 	},
-	WallPunishment: -1,
-	DeathPunishment: -200,
+	WallPunishment: 0,//-1,
+	DeathPunishment: -30, //-200,
 	PelletReward: 10,
 	ScatterTime: 1000 * 7
 }
@@ -181,18 +181,18 @@ function getNextWall(x, y, direction, map) {
 
 function isEmpty(x, y, direction, map) {
 	if(Math.abs(direction) == 1) {
-		if(x == 0 && Disque.sign(direction) == -1 || x == PACBOT.CONSTANTS.Cells - 1 && Disque.sign(direction) == 1) return false; 
+		if(x == 0 && Disque.sign(direction) == -1 || x == PACBOT.CONSTANTS.Cells - 1 && Disque.sign(direction) == 1) return [false]; 
 		if(map[y][x + Disque.sign(direction)] != PACBOT.MAP.Wall) {
 			return [true, v(x + Disque.sign(direction), y)];
 		}
-		return false;
+		return [false];
 	}
 	else {
-		if(y == 0 && Disque.sign(direction) == -1 || y == PACBOT.CONSTANTS.Cells - 1 && Disque.sign(direction) == 1) return false; 
+		if(y == 0 && Disque.sign(direction) == -1 || y == PACBOT.CONSTANTS.Cells - 1 && Disque.sign(direction) == 1) return [false]; 
 		if(map[y  + Disque.sign(direction)][x] != PACBOT.MAP.Wall) {
 			return [true, v(x, y + Disque.sign(direction))];
 		}
-		return false;
+		return [false];
 	}
 
 }
@@ -205,15 +205,15 @@ function getDistance(v, w) {
 
 function getDistanceFromEdge(c, direction) {
 	if(direction == PACBOT.Directions.Left) {
-		return getDistance(c, v(-1, v.y));
+		return getDistance(c, v(-1, c.y));
 	}
 	else if(direction == PACBOT.Directions.Right) {
-		return getDistance(c, v(PACBOT.CONSTANTS.Cells, v.y));
+		return getDistance(c, v(PACBOT.CONSTANTS.Cells, c.y));
 	}
 	if(direction == PACBOT.Directions.Up) {
-		return getDistance(c, v(v.x, -1));
+		return getDistance(c, v(c.x, -1));
 	}
-	return getDistance(c, v(v.x, PACBOT.CONSTANTS.Cells));
+	return getDistance(c, v(c.x, PACBOT.CONSTANTS.Cells));
 }
 
 function getPerpendicular(direction) {
@@ -284,6 +284,7 @@ function PacBot() {
 	this.reset = function() {
 		this.position = this.initialPosition.clone();
 		this.orientation = 0;
+		this.direction = PACBOT.Directions.Right;
 	}
 	/*this.update = function(p) {
 		var c = p.context;	
@@ -321,18 +322,24 @@ function PacBot() {
 			p.drawMap();
 		}
 	}*/
-	this.turn = function(bc, direction, map, pos) {
-		var options = getNearbyEmpty(bc.x, bc.y, map);
-		var center = v((bc.x + 0.5) * PACBOT.CONSTANTS.CellWidth, (bc.y + 0.5) * PACBOT.CONSTANTS.CellWidth);
-		for(var i = 0; i < options.length; i++) {
-			if(getDirection(bc, options[i]) == direction) {
-				this.orientation = getOrientation(direction);
-				this.direction = direction;
-				return options[i];
+	this.turn = function(bc, direction, map, pos, p, center) {
+		console.log(this.direction == -direction);
+		if(Math.abs(pos.x - center.x) < Disque.epsilon && Math.abs(pos.y - center.y) < Disque.epsilon) {
+			var options = getNearbyEmpty(bc.x, bc.y, map);		
+			for(var i = 0; i < options.length; i++) {
+				if(getDirection(bc, options[i]) == direction) {
+					this.orientation = getOrientation(direction);
+					this.direction = direction;
+					return options[i];
+				}
+			}
+			p.fitness += PACBOT.WallPunishment;
+		}
+		else {
+			if(direction != this.direction) {
+				p.fitness += PACBOT.WallPunishment;
 			}
 		}
-
-		this.fitness += PACBOT.WallPunishment;
 	}
 	this.move = function(p) {
 		this.position.x += this.speed * (p.dt / 1000.0) * Math.cos(this.orientation);
@@ -343,6 +350,11 @@ function PacBot() {
 		var input = this.memory.slice(0);
 		var bc = getBlockCoor(this.position.x, this.position.y);
 		var center = v((bc.x + 0.5) * PACBOT.CONSTANTS.CellWidth, (bc.y + 0.5) * PACBOT.CONSTANTS.CellWidth);
+		if(p.pelletMap[bc.y][bc.x] == PACBOT.MAP.Pellet) {
+			p.pelletMap[bc.y][bc.x] = PACBOT.MAP.Empty;
+			p.fitness += PACBOT.PelletReward;
+			p.drawMap();
+		}
 		for(var i = 0; i < p.ghosts.length; i++) {
 			var rb = getBlockCoor(p.ghosts[i].position.x, p.ghosts[i].position.y);
 			input.push(rb.x);
@@ -366,7 +378,6 @@ function PacBot() {
 		var rightWall = getNextWall(bc.x, bc.y, right, p.map);
 		rightWall = rightWall == -1 ? getDistanceFromEdge(this.position, right) : getDistance(this.position, rightWall);
 		rightWall -= this.radius;
-
 		var leftWall = getNextWall(bc.x, bc.y, -right, p.map);
 		leftWall = leftWall == -1 ? getDistanceFromEdge(this.position, -right) : getDistance(this.position, leftWall);
 		leftWall -= this.radius;
@@ -383,16 +394,23 @@ function PacBot() {
 
 		var op = p.brain.update(input);
 		this.memory = op.splice(2, 4);
-		//console.log(PACBOT.Directions.Array[Math.floor(op[0] * 4)]);
+
 		
 		this.speed = op[1] * 100;
 		var emp = isEmpty(bc.x, bc.y, this.direction, p.map);
+		var dir = [getPerpendicular(this.direction), -getPerpendicular(this.direction), -this.direction];
+
+		this.turn(bc, dir[Math.floor(op[0] * 3)], p.map, this.position, p, center);
 		if(emp[0]) 
 			this.target = v((emp[1].x + 0.5) * PACBOT.CONSTANTS.CellWidth, (emp[1].y + 0.5) * PACBOT.CONSTANTS.CellWidth);
-		if(Math.abs(this.position.x - this.target.x) > Disque.epsilon || Math.abs(this.position.y - this.target.y) > Disque.epsilon)
+
+		if(Math.abs(this.position.x - this.target.x) > Disque.epsilon || Math.abs(this.position.y - this.target.y) > Disque.epsilon) {
 			this.move(p);
-		else
-			this.turn(bc, PACBOT.Directions.Array[Math.floor(op[0] * 4)], p.map, this.position);
+		}
+		
+
+		/*else
+		*/
 
 	}
 	this.draw = function(c, s) {
@@ -424,21 +442,32 @@ function GhostBot(n, c) {
 	}
 	this.update = function(p) {
 		var c = p.context;
+		var bc = getBlockCoor(this.position.x, this.position.y);
 		if(this.scatterTimer > 0) {
 			this.scatterTimer -= p.dt;
 		}
 		else {
 			this.mode = PACBOT.States.Chase;
 
-			if(this.marker == PACBOT.Ghosts.Red || true) {
+			if(this.marker == PACBOT.Ghosts.Red || this.marker == PACBOT.Ghosts.Orange) {
 				this.target = getBlockCoor(p.pacBot.position.x, p.pacBot.position.y);
 			}
 			else if(this.marker == PACBOT.Ghosts.Pink) {
+				this.target = getBlockCoor(p.pacBot.position.x, p.pacBot.position.y);
+				var ek = getNearbyEmpty(this.target.x, this.target.y, p.map);
+				ek = ek[Math.floor(Disque.random(0, ek.length))];
+				ek = getNearbyEmpty(ek.x, ek.y, p.map);
+				ek = ek[Math.floor(Disque.random(0, ek.length))];
+				this.target = ek;
+			}
+			else if(this.marker == PACBOT.Ghosts.Orange || true) {
+				this.target = getBlockCoor(p.pacBot.position.x, p.pacBot.position.y);
+				var ek = getNearbyEmpty(bc.x, bc.y, p.map);
+				this.target = ek[Math.floor(Disque.random(0, ek.length))];
 			}
 		}
 		if(this.targetPosition == null || Math.abs(this.position.x - this.targetPosition.x) < Disque.epsilon && Math.abs(this.position.y - this.targetPosition.y) < Disque.epsilon) {
 			if(this.mode == PACBOT.States.Scatter || this.mode == PACBOT.States.Chase) {
-				var bc = getBlockCoor(this.position.x, this.position.y);
 				var options = getNearbyEmpty(bc.x, bc.y, p.map);
 				for(var i = 0; i < options.length && options.length > 1; i++) {
 					if(getDirection(bc, options[i]) == -this.direction) {
@@ -456,7 +485,7 @@ function GhostBot(n, c) {
 					}
 				}
 				this.direction = getDirection(bc, tb);
-				var cw = PACBOT.CONSTANTS.Width / PACBOT.CONSTANTS.Cells;
+				var cw = PACBOT.CONSTANTS.CellWidth;
 				this.targetPosition = v(0, 0);
 				this.targetPosition.x = tb.x * cw + cw / 2;
 				this.targetPosition.y = tb.y * cw + cw / 2;
@@ -483,7 +512,7 @@ function Block(start, w, h, color) {
 
 function drawPellet(c, x, y) {
 	c.beginPath();
-	c.arc(x, y, PACBOT.CONSTANTS.CellWidth * 0.15, 0, 2 * Math.PI, false);
+	c.arc(x, y, PACBOT.CONSTANTS.CellWidth * 0.1, 0, 2 * Math.PI, false);
 	c.fillStyle = "rgb(" + PACBOT.MAP.PelletColor.r +"," + PACBOT.MAP.PelletColor.g + "," + PACBOT.MAP.PelletColor.b + ")";
 	c.fill();
 	c.closePath();	
@@ -581,6 +610,7 @@ function PacBotGame(start, brain, map, back, front) {
 	this.resetAll = function() {
 		this.reset();
 		this.lives = 3;
+		this.fitness = 0;
 		for(var i = 0; i < this.pelletMap.length; i++) {
 			for(var j = 0; j < this.pelletMap[i].length; j++) {
 				if(this.pelletMap[i][j] == PACBOT.MAP.Empty) {

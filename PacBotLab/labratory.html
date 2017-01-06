@@ -15,6 +15,9 @@
 			width: 25%;
 			vertical-align: top;
 		}
+		.drawingCanvas {
+			position: absolute;
+		}
 	</style>
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript" src="neuralnetwork.js"></script>
@@ -70,8 +73,6 @@
 					<p text="Size of Gene Pool: " unit="">Size of Gene Pool: 20</p>
 					<input type="range" value="20" min="10" max="100" step="1" style="width: 100%" bind="poolSize"/>
 				</td>
-			</tr>
-			<tr>
 				<td>
 					<fieldset>
 						<legend>Reward for:</legend>
@@ -88,6 +89,10 @@
 						<input type="checkbox" bind="loseGameC" />Losing the Game<br />
 					</fieldset>
 				</td>
+			</tr>
+			<tr>
+				
+				
 				<td colspan="2">
 					<fieldset>
 						<legend>Controls:</legend>
@@ -105,8 +110,8 @@
 						<table style="width: 100%">
 							<tr>
 								<td><p text="Generation: " id="gener">Generation: 0</p></td>
-								<td><p text="Average Fitness: ">Average Fitness: 0</p></td>
-								<td><p text="Best Fitness: ">Best Fitness: 0</p></td>
+								<td><p text="Average Fitness: " id="avg">Average Fitness: 0</p></td>
+								<td><p text="Best Fitness: " id="bst">Best Fitness: 0</p></td>
 							</tr>
 						</table>
 					</fieldset>
@@ -166,16 +171,26 @@
 			var nh = Math.floor($(tube).width() / PACBOT.CONSTANTS.Width);
 			var nv = Math.ceil(conditions.poolSize / nh);
 			for(var i = 0; i < conditions.poolSize; i++) {
-				var canv = $("<canvas id='drawingBoard" + i + "'>");
+				var parent = $("<div class='container' style='display: inline-block'>");
+				var canv = $("<canvas class='drawingCanvas' id='backgroundBoard" + i + "'>");
+				var canv2 = $("<canvas class='drawingCanvas' id='drawingBoard" + i + "'>")
 				canv.attr("width", PACBOT.CONSTANTS.Width);
 				canv.attr("height", PACBOT.CONSTANTS.Height);
-				$(tube).append(canv);
-				experiments.push(new PacBotGame(canv[0].getContext('2d'), v(0, 0), new NeuralNetwork(16 + 4, 2 + 4, conditions.layers, conditions.npr), PACBOT.MainMap));
+				canv2.attr("width", PACBOT.CONSTANTS.Width);
+				canv2.attr("height", PACBOT.CONSTANTS.Height);
+				parent.css({
+					"width" : PACBOT.CONSTANTS.Width + "px",
+					"height" : PACBOT.CONSTANTS.Height + "px"
+				})
+				parent.append(canv);
+				parent.append(canv2);
+				$(tube).append(parent);
+				experiments.push(new PacBotGame(v(0, 0), new NeuralNetwork(16 + 4, 2 + 4, conditions.layers, conditions.npr), PACBOT.MainMap, canv[0], canv2[0]));
 				experiments[experiments.length - 1].brain.create();
 				genePool.genes.push(new gene(experiments[experiments.length - 1].brain.getWeights(), 0));
 			}
 			for(var i = 0; i < conditions.poolSize; i++) {
-				eval("threads[" + i + "] = setInterval(function() { experiments[" + i + "].update(); if(experiments[" + i + "].lives == 0) {dead++; if(dead == conditions.poolSize) {cleanUp();}}}, 1);");
+				eval("threads[" + i + "] = setInterval(function() { experiments[" + i + "].update(); if(experiments[" + i + "].lives == 0) {dead++; experiments[" + i + "].lives = -1; if(dead == conditions.poolSize) {cleanUp();}}}, 1);");
 			}
 		});
 		$(stateButton).on("click", function() {
@@ -206,17 +221,22 @@
 			}
 		}
 		function cleanUp() {
+
 			dead = 0;
 			console.log("Clean up started.");
 			statusI(0);
 			for(var i = 0; i < experiments.length; i++) {
 				genePool.genes[i].fitness = experiments[i].fitness;
 			}
-			genePool.epoch();
-			for(var i = 0; i < experiments.length; i++) {
-				experiments[i].brain.putWeights(genePool.genes[i].weights);
-				experiments[i].fitness = 0;
-				experiments[i].resetAll();
+			avg.innerHTML = avg.getAttribute("text") + genePool.averageFitness();
+			bst.innerHTML = bst.getAttribute("text") + genePool.bestFitness()[0];
+			if(epochStatus == 1) {
+				genePool.epoch();
+				for(var i = 0; i < experiments.length; i++) {
+					experiments[i].brain.putWeights(genePool.genes[i].weights);
+					experiments[i].fitness = 0;
+					experiments[i].resetAll();
+				}
 			}
 			statusI(1);
 			console.log("Clean up ended.");

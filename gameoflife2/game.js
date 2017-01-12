@@ -27,6 +27,8 @@ function sprite(r, w) {
 	}
 	this.setShape();
 	this.update = function() {
+		this.position.x += this.speed * Math.cos(this.orientation);
+		this.position.y += this.speed * Math.sin(this.orientation);
 		var op = this.brain.update([this.speed, this.orientation, this.memory[0], this.memory[1], this.memory[2], this.memory[3]]);
 		this.orientation += op[0] - op[1];
 		this.speed = (op[0] + op[1]);

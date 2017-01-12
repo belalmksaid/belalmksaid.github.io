@@ -1,0 +1,40 @@
+<html>
+	<head>
+	<style type="text/css">
+		html * {
+			margin: 0px; 
+			padding: 0px;
+			font-family: "Garamond";
+			font-weight: 100;
+		}
+	</style>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="neuralnetwork.js"></script>
+	<script type="text/javascript" src="disquemath.js"></script>
+	<script type="text/javascript" src="game.js"></script>
+</head>
+<body>
+<canvas id="world"></canvas>
+	
+	<script type="text/javascript">
+		$(window).on('load', function() {
+			world.width = $(window).width();
+			world.height = $(window).height();
+		});
+		$(window).resize(function() {
+			world.width = $(window).width();
+			world.height = $(window).height();
+		});
+
+		var universe = new World(world, 1000, 1000, 30);
+
+		function loop(time) {
+			universe.update();
+			universe.draw();
+			requestAnimationFrame(loop);
+		}
+		loop();
+
+	</script>
+</body>
+</html>

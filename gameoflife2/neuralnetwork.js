@@ -129,7 +129,7 @@ function GenePool() {
 	this.mutationRate = 0.3;
 	this.crossOverRate = 0.8;
 	this.generation = 0;
-	this.elite = 0.5;
+	this.elite = 0.2;
 	this.averageFitness = function() {
 		var avg = 0;
 		for(var i = 0; i < this.genes.length; i++) {
@@ -201,6 +201,34 @@ function GenePool() {
 			this.mutate(c2);
 			this.genes.push(new gene(c1, 0));
 			this.genes.push(new gene(c2, 0));
+		}
+		this.generation++;
+	}
+	this.epoch2 = function(n) {
+		var old = this.genes.splice(0);
+		this.genes.length = 0;
+		old.sort(function(a, b) {
+		if(a.fitness > b.fitness)
+			return 1;
+		else if(a.fitness < b.fitness)
+			return -1;
+		return 0;
+		});
+		for(var i = 0; i < old.length; i++) {
+			this.genes.push(old[i].clone());
+			this.genes[this.genes.length - 1].fitness = 0;
+		}
+		var original = this.genes.length;
+		while(this.genes.length != n) {
+			var c1 = new Array(), c2 = new Array();
+			var p1 = this.genes[Math.floor(random(0, original))].weights;
+			var p2 = this.genes[Math.floor(random(0, original))].weights;
+			this.breed(p1, p2, c1, c2);
+			this.mutate(c1);
+			this.mutate(c2);
+			this.genes.push(new gene(c1, 0));
+			this.genes.push(new gene(c2, 0));
+			original = this.genes.length;
 		}
 		this.generation++;
 	}

@@ -56,7 +56,22 @@ function ZERO() {
 	return new vector(0, 0);
 }
 
-function cirlceF(c, x, y, rad, orie, col) {
+function circleF(c, x, y, rad, col) {
+	c.beginPath();
+	c.arc(x, y, rad, 0, 2 * Math.PI, false);
+	c.fillStyle = "rgb(" + col.r +"," + col.g + "," + col.b + ")";
+	c.fill();
+	c.closePath();
+}
+
+function circleB(c, x, y, rad) {
+	c.beginPath();
+	c.arc(x, y, rad, 0, 2 * Math.PI, false);
+	c.closePath();
+	c.stroke();
+}
+
+function circleFl(c, x, y, rad, orie, col) {
 	c.beginPath();
 	c.arc(x, y, rad, 0, 2 * Math.PI, false);
 	c.fillStyle = "rgb(" + col.r +"," + col.g + "," + col.b + ")";
@@ -66,6 +81,12 @@ function cirlceF(c, x, y, rad, orie, col) {
 	c.moveTo(x, y);
 	c.lineTo(x + rad * Math.cos(orie), y + rad * Math.sin(orie));
 	c.lineWidth = 1;
+	c.stroke();
+}
+
+function rectangleB(c, x, y, w, h) {
+	c.beginPath();
+	c.rect(x - w, y - h, w * 2, h * 2);
 	c.stroke();
 }
 

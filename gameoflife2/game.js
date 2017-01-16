@@ -1,16 +1,16 @@
 var GOF = {
-	LAYERS: 1,
-	NPL: 6,
-	RADIUS: 20,
+	LAYERS: 3,
+	NPL: 8,
+	RADIUS: 5,
 	MAXSPEED: 2,
 	FOODCOLOR: new color(255, 110, 100),
-	FOODVALUE: 10,
+	FOODVALUE: 75,
 	BIRTH: 200
 }
 
 function sprite(w) {
 	this.type = "sprite";
-	this.brain = new NeuralNetwork(12, 6, GOF.LAYERS, GOF.NPL);
+	this.brain = new NeuralNetwork(14, 6, GOF.LAYERS, GOF.NPL);
 	if(w == null) {
 		this.brain.create();
 	}
@@ -31,19 +31,18 @@ function sprite(w) {
 		for(var i = 0; i < this.gene.weights.length; i += Math.floor(this.gene.weights.length / 6)) {
 			this.vertices.push(v(this.gene.weights[i] * this.radius, this.gene.weights[i + 1] * this.radius));
 		}
-		this.geneType = (this.gene.weights[1] + this.gene.weights[2] + this.gene.weights[3]) / 3.0;
 	}
 	this.setShape();
 	this.update = function(a, b, c, d, e) {
 		this.position.x += this.speed * Math.cos(this.orientation);
 		this.position.y += this.speed * Math.sin(this.orientation);
-		var op = this.brain.update([this.speed, this.orientation, this.health, a, b, c, d, e, this.memory[0], this.memory[1], this.memory[2], this.memory[3]]);
-		this.orientation += op[0] - op[1];
-		this.speed = (op[0] + op[1]);
+		var op = this.brain.update([this.position.x, this.position.y, this.speed, this.orientation, this.health, a, b, c, d, e, this.memory[0], this.memory[1], this.memory[2], this.memory[3]]);
+		this.orientation = op[0] * Math.PI * 2;
+		this.speed = op[1] * GOF.MAXSPEED;
 		this.memory = op.splice(2, 4);
-		this.health -= 0.1 * this.speed;
+		this.health -= 0.1;// + this.speed * 0.025;
 		this.gene.fitness = this.health;
-
+		this.geneType = this.memory[3];
 	}
 	this.draw = function(c) {
 		drawPolyB(c, this.position.x, this.position.y, this.vertices, this.orientation);
@@ -80,14 +79,16 @@ function World(canvas, w, h, n) {
 	this.sprites = [];
 	this.foodSprites = [];
 	this.genePool = new GenePool();
+	this.foodCounter = 10;
 	this.n = n;
 	this.reset = function() {
 		this.sprites = [];
+		this.foodSprites = [];
 		for(var i = 0; i < this.n; i++) {
 			this.sprites.push(new sprite());
 			this.sprites[this.sprites.length - 1].position = v(Disque.random(0, this.width), Disque.random(0, this.height));
 			this.genePool.genes.push(this.sprites[this.sprites.length - 1].gene);
-			if(i % 3 == 0) {
+			if(i % 5 == 0) {
 				this.foodSprites.push(new food());
 				this.foodSprites[this.foodSprites.length - 1].position = v(Disque.random(0, this.width), Disque.random(0, this.height));
 			}
@@ -100,21 +101,27 @@ function World(canvas, w, h, n) {
 	this.bottleNeck = function() {
 		this.genePool.epoch2(this.n);
 		this.sprites = [];
+		this.foodSprites = [];
 		for(var i = 0; i < this.genePool.genes.length; i++) {
 			this.sprites.push(new sprite());
 			this.sprites[this.sprites.length - 1].position = v(Disque.random(0, this.width), Disque.random(0, this.height));
 			this.sprites[this.sprites.length - 1].gene = this.genePool.genes[i];
 			this.sprites[this.sprites.length - 1].brain.putWeights(this.genePool.genes[i].weights);
 			this.sprites[this.sprites.length - 1].setShape();
+			if(i % 5 == 0) {
+				this.foodSprites.push(new food());
+				this.foodSprites[this.foodSprites.length - 1].position = v(Disque.random(0, this.width), Disque.random(0, this.height));
+			}
 		}
 	}
 	this.resolveInteraction = function(a, b, i, j) {
 		if(b.type == "food") {
 			a.health += b.health;
+			//this.foodSprites.splice(j, 1)
 			b.position = v(Disque.random(0, this.width), Disque.random(0, this.height));
 		}
 		else {
-			if(Math.abs(a.geneType - b.geneType) < this.genePool.elite / 8 && (a.health > 2 * GOF.BIRTH && b.health > 2 * GOF.BIRTH)) {
+			if(Math.abs(a.geneType - b.geneType) < this.genePool.elite / 5 && (a.health > 2 * GOF.BIRTH && b.health > 2 * GOF.BIRTH)) {
 				var child1 = new sprite(), child2 = new sprite();
 				var gene1 = new Array();
 				var gene2 = new Array();
@@ -136,18 +143,16 @@ function World(canvas, w, h, n) {
 				this.sprites.push(child2);
 				console.log("Children!");
 			}
-			else if(Math.abs(a.geneType - b.geneType) > this.genePool.elite * 3) {
-				if(a.geneType > b.geneType) {
+			else if(Math.abs(Math.abs(a.geneType) - Math.abs(b.geneType)) > this.genePool.elite * 1.5) {
+				if(Math.abs(a.geneType) > Math.abs(b.geneType)) {
 					a.health += b.health;
-					this.sprites.splice(j, 1);
-					this.genePool.genes.splice(j, 1);
+					b.health = 0;
 					console.log("KO!");
 					return 1;
 				}
 				else {
 					b.health += a.health;
-					this.sprites.splice(i, 1);
-					this.genePool.genes.splice(i, 1);
+					a.health = 0;
 					console.log("KO!");
 					return 2;
 				}
@@ -156,12 +161,24 @@ function World(canvas, w, h, n) {
 		return 0;
 	}
 	this.update = function() {
+		/*this.foodCounter--;
+		if(this.foodCounter <= 0) {
+			this.foodCounter = 10;
+			this.foodSprites.push(new food());
+			this.foodSprites[this.foodSprites.length - 1].position = v(Disque.random(0, this.width), Disque.random(0, this.height));
+		}*/
 		for(var i = 0; i < this.sprites.length; i++) {
 			var d = 100000;
 			var ind = 0;
 			var a = this.sprites[i];
 			var ind2 = 0;
 			var d2 = 100000;
+			if(a.position.x < 0 || a.position.x > this.width || a.position.y < 0 || a.position.y > this.height) {
+				this.sprites.splice(i, 1);
+				this.genePool.genes.splice(i, 1);
+				console.log("Out of line!");
+				continue;
+			}
 			for(var j = 0; j < this.foodSprites.length; j++) {
 				if(intersect(this.sprites[i], this.foodSprites[j])) { 
 					var n = this.resolveInteraction(this.sprites[i], this.foodSprites[j], i, j);
@@ -186,7 +203,7 @@ function World(canvas, w, h, n) {
 					ind = j;
 				}
 			}
-			if(this.sprites.length < this.n * this.genePool.elite) {
+			if(this.sprites.length <= this.n * this.genePool.elite) {// || this.foodSprites.length == 0) {
 				this.bottleNeck();
 				console.log("Forced Breeding!")
 				break;
@@ -199,7 +216,7 @@ function World(canvas, w, h, n) {
 					console.log("Death!");
 					//i--;
 				}
-				else {
+				if(this.sprites.length <= this.n * this.genePool.elite) { //|| this.foodSprites.length == 0) {
 					this.bottleNeck();
 					console.log("Forced Breeding!")
 					break;

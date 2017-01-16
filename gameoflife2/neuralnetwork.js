@@ -126,10 +126,10 @@ function gene(w, f) {
 
 function GenePool() {
 	this.genes = new Array();
-	this.mutationRate = 0.3;
+	this.mutationRate = 0.5;
 	this.crossOverRate = 0.8;
 	this.generation = 0;
-	this.elite = 0.2;
+	this.elite = 0.5;
 	this.averageFitness = function() {
 		var avg = 0;
 		for(var i = 0; i < this.genes.length; i++) {
@@ -214,12 +214,17 @@ function GenePool() {
 			return -1;
 		return 0;
 		});
-		for(var i = 0; i < old.length; i++) {
+		var midway = Math.floor(old.length * this.elite);
+		midway -= midway % 2;
+		if(midway < 2) midway = 2;
+		midway = old.length - midway;
+
+		for(var i = midway; i < old.length; i++) {
 			this.genes.push(old[i].clone());
 			this.genes[this.genes.length - 1].fitness = 0;
 		}
 		var original = this.genes.length;
-		while(this.genes.length != n) {
+		while(this.genes.length < n) {
 			var c1 = new Array(), c2 = new Array();
 			var p1 = this.genes[Math.floor(random(0, original))].weights;
 			var p2 = this.genes[Math.floor(random(0, original))].weights;
@@ -228,7 +233,6 @@ function GenePool() {
 			this.mutate(c2);
 			this.genes.push(new gene(c1, 0));
 			this.genes.push(new gene(c2, 0));
-			original = this.genes.length;
 		}
 		this.generation++;
 	}

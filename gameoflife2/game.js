@@ -189,6 +189,7 @@ function World(canvas, w, h, n) {
 				var t = (a.position.x - b.position.x) * (a.position.x - b.position.x) + (a.position.y - b.position.y) * (a.position.y - b.position.y);
 				if(t < d2) {
 					ind2 = j;
+					d2 = t;
 				}
 			}
 			for(var j = i + 1; j < this.sprites.length; j++) {
@@ -201,6 +202,7 @@ function World(canvas, w, h, n) {
 				var t = (a.position.x - b.position.x) * (a.position.x - b.position.x) + (a.position.y - b.position.y) * (a.position.y - b.position.y);
 				if(t < d) {
 					ind = j;
+					d = t;
 				}
 			}
 			if(this.sprites.length <= this.n * this.genePool.elite) {// || this.foodSprites.length == 0) {

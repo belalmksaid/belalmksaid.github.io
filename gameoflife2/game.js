@@ -45,8 +45,9 @@ function sprite(w) {
 		this.geneType = this.memory[3];
 	}
 	this.draw = function(c) {
-		drawPolyB(c, this.position.x, this.position.y, this.vertices, this.orientation);
-		circleB(c, this.position.x, this.position.y, this.radius);
+		//drawPolyB(c, this.position.x, this.position.y, this.vertices, this.orientation);
+		//circleB(c, this.position.x, this.position.y, this.radius);
+		circleF(c, this.position.x, this.position.y, this.radius, new color(Math.floor(this.memory[0] * 255), Math.floor(this.memory[1] * 255), Math.floor(this.memory[2] * 255)))
 	}
 }
 

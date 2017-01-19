@@ -180,7 +180,7 @@ function World(canvas, w, h, n) {
 				console.log("Out of line!");
 				continue;
 			}
-			for(var j = 0; j < this.foodSprites.length; j++) {
+			for(var j = 0; j < this.sprites.length; j++) {
 				if(intersect(this.sprites[i], this.foodSprites[j])) { 
 					var n = this.resolveInteraction(this.sprites[i], this.foodSprites[j], i, j);
 				}

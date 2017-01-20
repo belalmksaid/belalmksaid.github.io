@@ -130,6 +130,7 @@ function GenePool() {
 	this.crossOverRate = 0.8;
 	this.generation = 0;
 	this.elite = 0.5;
+	this.elite2 = 0.1;
 	this.averageFitness = function() {
 		var avg = 0;
 		for(var i = 0; i < this.genes.length; i++) {
@@ -214,7 +215,7 @@ function GenePool() {
 			return -1;
 		return 0;
 		});
-		var midway = Math.floor(old.length * this.elite);
+		var midway = Math.floor(old.length * this.elite2);
 		midway -= midway % 2;
 		if(midway < 2) midway = 2;
 		midway = old.length - midway;

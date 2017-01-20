@@ -206,20 +206,20 @@ function World(canvas, w, h, n) {
 					d = t;
 				}
 			}
-			if(this.sprites.length <= this.n * this.genePool.elite) {// || this.foodSprites.length == 0) {
+			if(this.sprites.length <= this.n * this.genePool.elite2) {// || this.foodSprites.length == 0) {
 				this.bottleNeck();
 				console.log("Forced Breeding!")
 				break;
 			}
 			this.sprites[i].update(a.position.x - this.sprites[ind].position.x, a.position.y - this.sprites[ind].position.y, this.sprites[ind].geneType, a.position.x - this.foodSprites[ind2].position.x, a.position.y - this.foodSprites[ind2].position.y);
 			if(this.sprites[i].health <= 0) {
-				if(this.sprites.length > this.n * this.genePool.elite) {
+				if(this.sprites.length > this.n * this.genePool.elite2) {
 					this.sprites.splice(i, 1);
 					this.genePool.genes.splice(i, 1);
 					console.log("Death!");
 					//i--;
 				}
-				if(this.sprites.length <= this.n * this.genePool.elite) { //|| this.foodSprites.length == 0) {
+				if(this.sprites.length <= this.n * this.genePool.elite2) { //|| this.foodSprites.length == 0) {
 					this.bottleNeck();
 					console.log("Forced Breeding!")
 					break;

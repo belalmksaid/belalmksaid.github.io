@@ -37,8 +37,8 @@ function sprite(w) {
 		this.position.x += this.speed * Math.cos(this.orientation);
 		this.position.y += this.speed * Math.sin(this.orientation);
 		var op = this.brain.update([this.position.x, this.position.y, this.speed, this.orientation, this.health, a, b, c, d, e, this.memory[0], this.memory[1], this.memory[2], this.memory[3]]);
-		this.orientation = op[0] * Math.PI * 2;
-		this.speed = op[1] * GOF.MAXSPEED;
+		this.orientation = op[0] * Math.PI * 2.0;
+		this.speed = op[1];
 		this.memory = op.splice(2, 4);
 		this.health -= 0.1;// + this.speed * 0.025;
 		this.gene.fitness = this.health;

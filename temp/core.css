@@ -1,0 +1,149 @@
+:root {
+  --main-color: rgb(116, 27, 71);
+}
+
+ html * {
+	margin: 0px; 
+	padding: 0px;
+	font-family: "Garamond";
+	font-weight: 100;
+}
+
+b {
+	font-weight: 900;
+}
+
+body {
+	background-image: url("background.png");
+}
+
+iframe {
+	border: none;
+}
+
+#truebody {
+	margin-top: 60px;
+}
+
+#barmenu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    overflow: hidden;
+    position: fixed;
+    border-bottom: #a6a9ad 0.5px solid;
+    width: 100%;
+    background-image: url("background.png");
+}
+
+#barmenu li {
+    float: left;
+}
+
+#barmenu li a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    border-style: solid;
+	border: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+
+#barmenu li a:hover:not(.active) {
+	border-style: solid;
+	border: none;
+    border-bottom: solid 3px rgb(116, 27, 71);
+}
+
+#barmenu .active {
+    background-color: rgb(116, 27, 71);
+    color: white;
+    border-bottom: solid 3px rgb(116, 27, 71);
+}
+#barmenu .active:hover {
+    background-color: rgb(116, 27, 71);
+}
+
+#intro {
+	font-size: 55px;
+	color: rgb(116, 27, 71);
+	text-align: center;
+
+}
+
+#blurb {
+	font-size: 20px;
+	color: black;
+	text-align: center;
+}
+
+#profile {
+	display: block;
+	border-radius: 50%;
+	height: 160px;
+	width: 160px;
+	margin-left: auto;
+    margin-right: auto;
+}
+
+#smedia img {
+	width: 36px;
+	height: 36px;
+}
+
+#smedia{
+	margin: 0 auto;
+	width: 160px;
+}
+
+
+#pcontainer {
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#pcontainer h2 > a {
+	color: rgb(116, 27, 71);
+	font-weight: 400;
+	text-decoration: none;
+}
+
+#pcontainer h2 > a:hover {
+	text-decoration: underline;
+}
+
+#projectdisplay {
+	text-align: center;
+}
+
+#pcontainer > h2 {
+	text-align: center;
+}
+
+#projectdisplay > img {
+	height: 150px;
+	display: inline-block;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+#bio {
+	width: 400px;
+	padding: 15px;
+	height: 314px;
+	border: 0.5px solid;
+	background: white;
+	margin-top: 14px;
+	margin-left: 40px;
+	font-size: 19px;
+}
+
+#srcicon {
+	width: 25px;
+}

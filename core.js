@@ -16,8 +16,8 @@ var createBlackHole = false;
 
 function star() {
 	this.position = Disque.randomV(0, background.offsetWidth, 0, background.offsetHeight);
-	this.speed =  Disque.randomV(-0.4, 0.4, -0.4, 0.4);
-	this.oSpeed = Disque.random(0.0001, .02);
+	this.speed =  Disque.randomV(-0.8, 0.8, -0.8, 0.8);
+	this.oSpeed = Disque.random(0.0001, .04);
 	this.radius = Disque.random(0.1, 2.6);
 	this.op = Disque.random(0, 1);
 	this.update = function() {
@@ -63,4 +63,4 @@ setInterval(function() {
 			stars[i].update();
 			stars[i].draw(ctx);
 		}	
-	}, 30);
+	}, 60);

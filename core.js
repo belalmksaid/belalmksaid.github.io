@@ -17,7 +17,7 @@ var createBlackHole = false;
 function star() {
 	this.position = Disque.randomV(0, background.offsetWidth, 0, background.offsetHeight);
 	this.speed =  Disque.randomV(-0.4, 0.4, -0.4, 0.4);
-	this.oSpeed = Disque.random(0.0001, .05);
+	this.oSpeed = Disque.random(0.0001, .02);
 	this.radius = Disque.random(0.1, 2.6);
 	this.op = Disque.random(0, 1);
 	this.update = function() {

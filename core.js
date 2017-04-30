@@ -1,6 +1,7 @@
 $( window ).on('resize load', function() {
 	background.width = background.offsetWidth;
 	background.height = background.offsetHeight;
+	$(realbody).css('height', (window.innerHeight - ($('#navbar').length > 0 ? 33 : 0)) + 'px');
 });
 
 ctx = 0;

@@ -20,6 +20,10 @@ body {
   background: linear-gradient(-20deg, var(--b-color2), var(--b-color)); /* Standard syntax */
 }
 
+#realbody {
+	overflow-y: auto;
+}
+
 #background {
 	position: absolute;
 	width: 100%;
@@ -38,9 +42,9 @@ body {
 
 #prof {
 	margin: auto;
-  position: absolute;
-  width: 500px;
-  top: 0; left: 0; bottom: 0; right: 0;
+  	position: absolute;
+  	width: 500px;
+  	top: 0; left: 0; bottom: 0; right: 0;
 }
 
 #smedia img {
@@ -82,4 +86,43 @@ a:hover {
 
 #sidelist ul {
 	list-style-type: none;
+}
+
+#navbar {
+	text-align: center;
+	color: white;
+	font-size: 18pt;
+	height: 33px;
+}
+
+#posters {
+	padding-top: 20px;
+}
+
+.srcicon {
+	width: 25px;
+}
+
+.projectPoster {
+	background-color: white;
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	padding: 10px;
+}
+
+.projectPoster a {
+	color: #268bd2;
+}
+
+.projectdisplay > img {
+	height: 150px;
+	display: inline-block;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+.projectdisplay {
+	text-align: center;
 }

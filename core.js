@@ -13,7 +13,7 @@ $( window ).on('load', function() {
 
 var stars = new Array();
 var white = new color(255, 255, 255);
-var createBlackHole = false;
+var cBlackHole = false;
 
 function star() {
 	this.position = Disque.randomV(0, background.offsetWidth, 0, background.offsetHeight);
@@ -59,9 +59,13 @@ function clear() {
 
 setInterval(function() {
 	clear();
-	if(!createBlackHole)
+	if(!cBlackHole)
 		for(var i = 0; i < stars.length; i++) {
 			stars[i].update();
 			stars[i].draw(ctx);
 		}	
 	}, 60);
+
+function createBlackHole() {
+	alert("Under Construction!");
+}

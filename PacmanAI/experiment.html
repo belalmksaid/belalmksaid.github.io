@@ -1,0 +1,69 @@
+<html>
+	<head>
+		<script type="text/javascript" src="gamecode/pacmanMOD.js"></script>
+		<script type="text/javascript" src="gamecode/modernizr-1.5.min.js"></script>
+		<script type="text/javascript" src="neuralnetwork2.js"></script>
+		<script type="text/javascript">
+			var pacBrain = new NeuralNetwork();
+			pacBrain.numInputs = 15;
+			pacBrain.numOutputs = 1;
+			pacBrain.numHiddenLayers = 1;
+			pacBrain.create();
+			var pacGene = new gene(pacBrain.getWeights(), 0);
+
+		</script>
+		<style type="text/css">
+			html *
+			{
+				margin: 0px; 
+				padding: 0px;
+			}
+			@font-face 
+		 	{
+	    		font-family: 'BDCartoonShoutRegular';
+        		src: url('gamecode/BD_Cartoon_Shout-webfont.ttf') format('truetype');
+	    		font-weight: normal;
+	    		font-style: normal;
+      		}
+		</style>
+	</head>
+	<body>
+		<div id="pace" style="width:342px;"></div>
+		<script type="text/javascript">
+			PACMAN.init(document.getElementById("pace"), "./gamecode");
+			function resetScore() {
+				PACMAN.startNewGame();
+			}
+			setInterval(function() {
+				if(STAT == 7 && MOD) {
+					var temp = new Array();
+					for(var i = 0; i < LOC.length; i++) {
+						temp.push(LOC[i]);
+					}
+					temp.push(U);
+					temp.push(D);
+					temp.push(L);
+					temp.push(R);
+					temp.push(ISV);
+					temp.push(Math.round(position.x / 10));
+					temp.push(Math.round(position.y / 10));
+					var o = pacBrain.update(temp)[0];
+					if(o < 0.25) {
+						PACMAN.keyDown({"keyCode" : KEY.ARROW_DOWN, "preventDefault": function() {}, "stopPropagation" : function() {}});
+					}
+					else if(o < 0.5) {
+						PACMAN.keyDown({"keyCode" : KEY.ARROW_UP, "preventDefault": function() {}, "stopPropagation" : function() {}});
+					}
+					else if(o < 0.75) {
+						PACMAN.keyDown({"keyCode" : KEY.ARROW_LEFT, "preventDefault": function() {}, "stopPropagation" : function() {}});
+					}
+					else {
+						PACMAN.keyDown({"keyCode" : KEY.ARROW_RIGHT, "preventDefault": function() {}, "stopPropagation" : function() {}});
+					}
+					pacGene.fitness = FITNESS;
+					//console.log(o[0]);
+				}
+			}, 1);
+		</script>
+	</body>
+</html>

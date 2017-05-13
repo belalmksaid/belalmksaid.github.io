@@ -117,7 +117,7 @@ a:hover {
 	color: #268bd2;
 }
 
-.projectdisplay > img {
+.projectdisplay > * {
 	height: 150px;
 	display: inline-block;
 	padding-left: 30px;

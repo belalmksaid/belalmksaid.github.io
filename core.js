@@ -36,15 +36,15 @@ function star() {
 	this.distance = 0;
 	this.update = function() {
 		if(cBlackHole) {
-			this.distance = Math.sqrt(dist(this.position, center.position));
-			this.op = Math.min(1, 60000 / dist(this.position, center.position));
 			if(this.op < 0) {
 				return;
 			}
 			if(this.angle == 'w') {
 				this.angle = Math.atan2(this.position.y - center.position.y, this.position.x - center.position.x);
-			}
-			this.speed = 1 / this.distance;
+				this.distance = Math.sqrt(dist(this.position, center.position));
+				this.op = Math.max(0, Math.min(1, 40000 / dist(this.position, center.position)));
+				this.speed = 2.5 / this.distance;
+			}			
 			this.angle += this.speed;
 			this.position.x = Math.cos(this.angle) * this.distance + center.position.x;
 			this.position.y = Math.sin(this.angle) * this.distance + center.position.y;
@@ -88,7 +88,7 @@ function createStars() {
 }
 
 function createMoreStars() {
-	for(var i = 0; i < 300; i++) {
+	for(var i = 0; i < 1000; i++) {
 		stars.push(new star());
 	}
 }

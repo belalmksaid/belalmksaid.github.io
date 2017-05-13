@@ -120,5 +120,11 @@ var Disque = {
 	randomV: function(xmn, xmx, ymn, ymx) {
 		return v(Disque.random(xmn, xmx), Disque.random(ymn, ymx));
 	},
+	distance: function(a, b) {
+		return Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+	},
+	lengthSqrd: function(a, b) {
+		return ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+	},
 	epsilon: 1
 };

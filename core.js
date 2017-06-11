@@ -98,15 +98,6 @@ function clear() {
 }
 
 setInterval(function() {
-	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-		background.width = background.offsetWidth;
-		background.height = background.offsetHeight;
-		$(realbody).css('height', (window.innerHeight - ($('#navbar').length > 0 ? 33 : 0)) + 'px');
-		if(center != 0) {
-			center.position.x = profile.getBoundingClientRect().left + 80;
-			center.position.y = profile.getBoundingClientRect().top + 80;
-		}
-	}
 	clear();
 	for(var i = 0; i < stars.length; i++) {
 		stars[i].update();

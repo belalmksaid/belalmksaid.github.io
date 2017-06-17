@@ -48,6 +48,7 @@
 					temp.push(Math.round(position.x / 10));
 					temp.push(Math.round(position.y / 10));
 					var o = pacBrain.update(temp)[0];
+					console.log("actions");
 					if(o < 0.25) {
 						PACMAN.keyDown({"keyCode" : KEY.ARROW_DOWN, "preventDefault": function() {}, "stopPropagation" : function() {}});
 					}

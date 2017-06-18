@@ -1,6 +1,8 @@
 $( window ).on('resize load', function() {
-	sandbox.width = sandbox.offsetWidth;
-	sandbox.height = sandbox.offsetHeight;
+    if(sandbox.offsetWidth > sandbox.width) {
+        sandbox.width = sandbox.offsetWidth;
+	    sandbox.height = sandbox.width;
+    }
 });
 
 class sweeper {
@@ -21,5 +23,19 @@ class sweeper {
 
     draw(c) {
 
+    }
+}
+
+class pellet {
+    constructor(pos, rad, col) {
+        this.position = pos;
+        this.radius = rad;
+        this.color = col;
+        this.visible = true;
+    }
+
+    draw(c) {
+        if(this.visible)
+            circleFl(c, this.position.x, this.position.y, this.radius, this.color);
     }
 }

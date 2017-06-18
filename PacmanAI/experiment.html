@@ -7,7 +7,8 @@
 			var pacBrain = new NeuralNetwork();
 			pacBrain.numInputs = 15;
 			pacBrain.numOutputs = 1;
-			pacBrain.numHiddenLayers = 1;
+			pacBrain.numHiddenLayers = 2;
+			pacBrain.NPR = 8;
 			pacBrain.create();
 			var pacGene = new gene(pacBrain.getWeights(), 0);
 

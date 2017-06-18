@@ -621,7 +621,7 @@ Pacman.Map = function (size) {
         map    = Pacman.MAP.clone();
         height = map.length;
         width  = map[0].length;  
-        FITNESS = 0;      
+        FITNESS /= 2;      
     };
 
     function block(pos) {

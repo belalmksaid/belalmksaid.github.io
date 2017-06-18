@@ -35,7 +35,8 @@ class pellet {
     }
 
     draw(c) {
-        if(this.visible)
+        if(this.visible) {
             circleFl(c, this.position.x, this.position.y, this.radius, this.color);
+        }
     }
 }

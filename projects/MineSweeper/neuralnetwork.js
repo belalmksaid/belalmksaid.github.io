@@ -22,9 +22,9 @@ function NeuronLayer(s, n) {
 	}
 }
 
-function NeuralNetwork() {
-	this.numInputs = 4;
-	this.numOutputs = 2;
+function NeuralNetwork(noi = 4, noo = 2) {
+	this.numInputs = noi;
+	this.numOutputs = noo;
 	this.numHiddenLayers = 1;
 	this.NPR = 6;
 	this.layers = new Array();

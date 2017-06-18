@@ -34,6 +34,8 @@
             }
 
             function loop() {
+                C.clearRect(0, 0, sandbox.width, sandbox.height);
+                drawPellets();
                 window.requestAnimationFrame(loop);
             }
             window.requestAnimationFrame(loop);

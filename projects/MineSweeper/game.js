@@ -9,6 +9,18 @@ class world {
     constructor() {
         this.pellets = new Array();
         this.sweepers = new Array();
+        this.genepool = new GenePool();
+    }
+
+    evolve() {
+        for(let i = 0; i < this.sweepers.length; i++) {
+            this.genepool.genes[i].fitness = this.sweepers[i].fitness;
+        }
+        this.genepool.epoch(0.4);
+        for(let i = 0; i < this.sweepers.length; i++) {
+            this.sweepers[i].brain.putWeights(this.genepool.genes[i]);
+             this.sweepers[i].reset();
+        }
     }
 
     draw(c) {

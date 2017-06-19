@@ -23,9 +23,12 @@
             C = sandbox.getContext('2d');
             black = new color(0, 0, 0);
             var pellets = new Array();
-            for(let i = 0; i < 50; i++) {
-                pellets.push(new pellet(v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.height)), 25, black));
-            }
+            $( window ).on('load', function() {
+                for(let i = 0; i < 50; i++) {
+                    pellets.push(new pellet(v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.height)), 25, black));
+                }
+            });
+            
 
             function drawPellets() {
                 for(let i = 0; i < pellets.length; i++) {

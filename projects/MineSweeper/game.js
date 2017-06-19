@@ -5,12 +5,30 @@ $( window ).on('resize load', function() {
     }
 });
 
+class world {
+    constructor() {
+        this.pellets = new Array();
+        this.sweepers = new Array();
+    }
+
+    draw(c) {
+        for(let i = 0; i < this.pellets.length; i++) {
+           this.pellets[i].draw(C);
+        }
+        for(let i = 0; i < this.sweeprs.length; i++) {
+           this.sweepers[i].draw(C);
+        }
+    }
+}
+
 class sweeper {
-    constructor(pos, or, spd) {
+    constructor(pos, or, spd, rad) {
         this.position = pos;
         this.orientation = or;
         this.speed = spd;
         this.brain = new NeuralNetwork();
+        this.input = new Array();
+        this.radius = rad;
     }
 
     reset() {
@@ -18,11 +36,16 @@ class sweeper {
     }
 
     update() {
-
+        
     }
 
     draw(c) {
-
+        c.save();
+	    c.translate(this.position.x, this.position.y);
+	    c.rotate(this.orientation);
+	    c.translate(-this.position.x, -this.position.y);
+        rectangleB(c, this.position.x, this.position.y, this.radius, this.radius);
+        c.restore();
     }
 }
 

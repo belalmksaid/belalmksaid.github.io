@@ -22,23 +22,19 @@
         <script>
             C = sandbox.getContext('2d');
             black = new color(0, 0, 0);
-            var pellets = new Array();
+            var universe  = new world();
             $( window ).on('load', function() {
                 for(let i = 0; i < 50; i++) {
-                    pellets.push(new pellet(v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.height)), 2.5, black));
+                    universe.pellets.push(new pellet(v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.height)), 2.5, black));
+                }
+                for(let i = 0; i < 20; i++) {
+                    universe.sweepers.push(new sweeper(v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.height)), Disque.random(0, 2 * Math.PI), 0, 4));
                 }
             });
             
-
-            function drawPellets() {
-                for(let i = 0; i < pellets.length; i++) {
-                    pellets[i].draw(C);
-                }
-            }
-
             function loop() {
                 C.clearRect(0, 0, sandbox.width, sandbox.height);
-                drawPellets();
+                universe.draw(C);
                 window.requestAnimationFrame(loop);
             }
             window.requestAnimationFrame(loop);

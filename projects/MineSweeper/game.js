@@ -26,7 +26,7 @@ class world {
                    dis = td;
                }
            }
-           this.sweepers[i].draw(C);
+           this.sweepers[i].draw(C, this.pellets[index].x, this.pellets[index].y);
         }
         for(let i = 0; i < this.pellets.length; i++) {
            this.pellets[i].draw(C);
@@ -79,7 +79,7 @@ class sweeper {
     }
 
     draw(c, x, y) {
-        this.update(x, y);
+        this.update(this.position.x - x, this.position.y - y);
         c.save();
 	    c.translate(this.position.x, this.position.y);
 	    c.rotate(this.orientation);

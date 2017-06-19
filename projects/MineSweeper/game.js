@@ -38,6 +38,21 @@ class sweeper {
     update() {
         this.position.x += this.speed * Math.cos(this.orientation);
         this.position.y += this.speed * Math.sin(this.orientation);
+
+        if(this.position.x < 0) {
+            this.position.x = sandbox.width - 1;
+        }
+        else if(this.position.x > sandbox.width) {
+            this.position.x = 1;
+        }
+
+        if(this.position.y < 0) {
+            this.position.y = sandbox.height - 1;
+        }
+        else if(this.position.y > sandbox.height) {
+            this.position.y = 1;
+        }
+
     }
 
     draw(c) {

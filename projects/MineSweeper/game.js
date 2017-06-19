@@ -18,7 +18,7 @@ class world {
         }
         this.genepool.epoch(0.4);
         for(let i = 0; i < this.sweepers.length; i++) {
-            this.sweepers[i].brain.putWeights(this.genepool.genes[i]);
+            this.sweepers[i].brain.putWeights(this.genepool.genes[i].weights);
              this.sweepers[i].reset();
         }
     }

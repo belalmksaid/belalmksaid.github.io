@@ -26,7 +26,7 @@ class world {
                    dis = td;
                }
            }
-           this.sweepers[i].draw(C, this.pellets[index].x, this.pellets[index].y);
+           this.sweepers[i].draw(C, this.pellets[index].position.x, this.pellets[index].position.y);
         }
         for(let i = 0; i < this.pellets.length; i++) {
            this.pellets[i].draw(C);

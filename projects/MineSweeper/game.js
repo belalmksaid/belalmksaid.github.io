@@ -45,7 +45,7 @@ class sweeper {
 	    c.rotate(this.orientation);
 	    c.translate(-this.position.x, -this.position.y);
         rectangleB(c, this.position.x, this.position.y, this.radius, this.radius);
-        rectangleB(c, this.position.x, this.position.y + 0.25 * this.radius, 1.5 * this.radius, 0.33333 * this.radius);
+        rectangleB(c, this.position.x, this.position.y + 0.25 * this.radius, 0.333333 * this.radius, 1.5 * this.radius);
         c.restore();
     }
 }

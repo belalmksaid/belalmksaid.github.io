@@ -15,7 +15,7 @@ class world {
         for(let i = 0; i < this.pellets.length; i++) {
            this.pellets[i].draw(C);
         }
-        for(let i = 0; i < this.sweeprs.length; i++) {
+        for(let i = 0; i < this.sweepers.length; i++) {
            this.sweepers[i].draw(C);
         }
     }

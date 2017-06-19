@@ -40,6 +40,7 @@ class sweeper {
         this.orientation = or;
         this.speed = spd;
         this.brain = new NeuralNetwork(2, 2);
+        this.brain.create();
         this.input = new Array();
         this.output = new Array();
         this.radius = rad;

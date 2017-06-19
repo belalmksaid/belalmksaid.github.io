@@ -12,11 +12,17 @@ class world {
     }
 
     draw(c) {
-        for(let i = 0; i < this.pellets.length; i++) {
-           this.pellets[i].draw(C);
-        }
         for(let i = 0; i < this.sweepers.length; i++) {
            this.sweepers[i].draw(C);
+           for(let j = 0; j < this.pellets.length; j++) {
+               if(Disque.intersect(this.sweepers[i].position, this.pellets[j].position, this.sweepers[i].radius, this.pellets[j].radius)) {
+                   this.sweepers[i].fitness += this.pellets[j].value;
+                   this.pellets[j].reset();
+               }
+           }
+        }
+        for(let i = 0; i < this.pellets.length; i++) {
+           this.pellets[i].draw(C);
         }
     }
 }
@@ -29,10 +35,12 @@ class sweeper {
         this.brain = new NeuralNetwork();
         this.input = new Array();
         this.radius = rad;
+        this.fitness = 0;
     }
 
     reset() {
-
+        this.position = v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.height));
+        this.fitness = 0;
     }
 
     update() {
@@ -73,6 +81,11 @@ class pellet {
         this.radius = rad;
         this.color = col;
         this.visible = true;
+        this.value = 1;
+    }
+
+    reset() {
+         this.position = v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.height));
     }
 
     draw(c) {

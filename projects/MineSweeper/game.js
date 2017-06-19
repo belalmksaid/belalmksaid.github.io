@@ -13,13 +13,20 @@ class world {
 
     draw(c) {
         for(let i = 0; i < this.sweepers.length; i++) {
-           this.sweepers[i].draw(C);
+            let index = -1;
+            let dis = 100000000;
            for(let j = 0; j < this.pellets.length; j++) {
-               if(Disque.intersect(this.sweepers[i].position, this.pellets[j].position, this.sweepers[i].radius, this.pellets[j].radius)) {
+               let td = Disque.lengthSqrd(this.sweepers[i].position, this.pellets[j].position);
+               if(td < Math.pow(this.sweepers[i].radius + this.pellets[j].radius, 2)) {
                    this.sweepers[i].fitness += this.pellets[j].value;
                    this.pellets[j].reset();
                }
+               if(td < dis) {
+                   index = j;
+                   dis = td;
+               }
            }
+           this.sweepers[i].draw(C);
         }
         for(let i = 0; i < this.pellets.length; i++) {
            this.pellets[i].draw(C);
@@ -32,8 +39,9 @@ class sweeper {
         this.position = pos;
         this.orientation = or;
         this.speed = spd;
-        this.brain = new NeuralNetwork();
+        this.brain = new NeuralNetwork(2, 2);
         this.input = new Array();
+        this.output = new Array();
         this.radius = rad;
         this.fitness = 0;
     }
@@ -43,9 +51,15 @@ class sweeper {
         this.fitness = 0;
     }
 
-    update() {
+    update(x, y) {
         this.position.x += this.speed * Math.cos(this.orientation);
         this.position.y += this.speed * Math.sin(this.orientation);
+
+        this.input[0] = x;
+        this.input[1] = y;
+        this.output = this.brain.update(this.input);
+        this.speed = this.output[0] + this.output[1];
+        this.orientation += (this.output[0] - this.output[1]);
 
         if(this.position.x < 0) {
             this.position.x = sandbox.width - 1;
@@ -63,8 +77,8 @@ class sweeper {
 
     }
 
-    draw(c) {
-        this.update();
+    draw(c, x, y) {
+        this.update(x, y);
         c.save();
 	    c.translate(this.position.x, this.position.y);
 	    c.rotate(this.orientation);

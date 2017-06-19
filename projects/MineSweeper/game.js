@@ -36,7 +36,8 @@ class sweeper {
     }
 
     update() {
-        
+        this.position.x += this.speed * Math.cos(this.orientation);
+        this.position.y += this.speed * Math.sin(this.orientation);
     }
 
     draw(c) {

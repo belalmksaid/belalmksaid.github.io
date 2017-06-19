@@ -41,6 +41,7 @@ class sweeper {
     }
 
     draw(c) {
+        this.update();
         c.save();
 	    c.translate(this.position.x, this.position.y);
 	    c.rotate(this.orientation);

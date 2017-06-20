@@ -267,7 +267,7 @@ function GenePool() {
 
 			if(this.genes[i].fitness < lsf) {
 				lsf = this.genes[i].fitness;
-				this.worstFitness = wsf;
+				this.worstFitness = lsf;
 			}
 
 			this.totalFitness += this.genes[i].fitness;

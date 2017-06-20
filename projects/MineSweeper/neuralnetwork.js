@@ -205,13 +205,15 @@ function GenePool() {
 
 		var temp = new Array();
 
-		if(!(elite * this.genes.length % 2)) {
+		if(!(elite * this.genes.length % 2 == 0)) {
 			this.grab(this.genes.length * elite, 1, temp);
 		}
+
 		
 		while(temp.length < this.genes.length) {
 			let mum = this.getRoulette();
 			let dad = this.getRoulette();
+
 
 			let b1 = new Array(), b2 = new Array();
 

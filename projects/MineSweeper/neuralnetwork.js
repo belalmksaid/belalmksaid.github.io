@@ -190,10 +190,10 @@ function GenePool() {
 		this.generation++;
 	}
 
-	this.epoch2 = function() {
-		let old = this.genes.splice(0);
+	this.epoch2 = function(elite) {
+		//let old = this.genes.splice(0);
 		this.reset();
-		old.sort(function(a, b) {
+		this.genes.sort(function(a, b) {
 			if(a.fitness > b.fitness)
 				return 1;
 			else if(a.fitness < b.fitness)
@@ -201,9 +201,29 @@ function GenePool() {
 			return 0;
 		});
 
-		for(let i = 0; i < old.length; i++) {
-			console.log(old[i].fitness);
+		this.calc();
+
+		var temp = new Array();
+
+		if(!(elite * this.genes.length % 2)) {
+			this.grab(this.genes.length * elite, 1, temp);
 		}
+		
+		while(temp.length < this.genes.length) {
+			let mum = this.getRoulette();
+			let dad = this.getRoulette();
+
+			let b1 = new Array(), b2 = new Array();
+
+			this.breed(mum.weights, dad.weights, b1, b2);
+
+			this.mutate(b1);
+			this.mutate(b2);
+
+			temp.push(new gene(b1, 0));
+			temp.push(new gene(b2, 0));
+		}
+		this.genes = temp;
 	}
 	this.averageFitness = function() {
 		return this.totalFitness / this.genes.length;

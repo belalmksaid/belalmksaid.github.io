@@ -69,7 +69,7 @@ class sweeper {
         this.position.y += this.speed * Math.sin(this.orientation);
         this.input[0] = x;
         this.input[1] = y;
-        this.input[1] = -Math.sin(this.orientation);
+        this.input[2] = -Math.sin(this.orientation);
         this.input[3] = Math.cos(this.orientation);
         this.output = this.brain.update(this.input);
         this.speed = this.output[0] + this.output[1];

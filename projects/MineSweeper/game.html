@@ -39,6 +39,11 @@
                 window.requestAnimationFrame(loop);
             }
             window.requestAnimationFrame(loop);
+
+            window.setInterval(function() {
+                universe.evolve();
+            }, 60000);
+
         </script>
     </body>
 </html>

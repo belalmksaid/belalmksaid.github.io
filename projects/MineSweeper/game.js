@@ -10,6 +10,7 @@ class world {
         this.pellets = new Array();
         this.sweepers = new Array();
         this.genepool = new GenePool();
+        this.debug = false;
     }
 
     evolve() {
@@ -38,7 +39,7 @@ class world {
                    dis = td;
                }
            }
-           this.sweepers[i].draw(C, this.pellets[index].position.x, this.pellets[index].position.y);
+           this.sweepers[i].draw(C, this.pellets[index].position.x, this.pellets[index].position.y, this.debug);
         }
         for(let i = 0; i < this.pellets.length; i++) {
            this.pellets[i].draw(C);
@@ -67,8 +68,8 @@ class sweeper {
     update(x, y) {
         this.position.x += this.speed * Math.cos(this.orientation);
         this.position.y += this.speed * Math.sin(this.orientation);
-        this.input[0] = x;
-        this.input[1] = y;
+        this.input[0] = x - this.position.x;
+        this.input[1] = y - this.position.y;
         this.input[2] = -Math.sin(this.orientation);
         this.input[3] = Math.cos(this.orientation);
         this.output = this.brain.update(this.input);
@@ -91,8 +92,8 @@ class sweeper {
 
     }
 
-    draw(c, x, y) {
-        this.update(this.position.x - x, this.position.y - y);
+    draw(c, x, y, d) {
+        this.update(x, y);
         c.save();
 	    c.translate(this.position.x, this.position.y);
 	    c.rotate(this.orientation);
@@ -100,6 +101,12 @@ class sweeper {
         rectangleB(c, this.position.x, this.position.y, this.radius, this.radius);
         rectangleB(c, this.position.x + 0.5 * this.radius, this.position.y, 1.5 * this.radius, 0.3333 * this.radius);
         c.restore();
+        if(d) {
+            c.beginPath();
+            c.moveTo(this.position.x, this.position.y);
+            c.lineTo(x, y);
+            c.stroke();
+        }
     }
 }
 

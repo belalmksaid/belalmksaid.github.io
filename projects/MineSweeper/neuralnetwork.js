@@ -126,9 +126,14 @@ function gene(w, f) {
 
 function GenePool() {
 	this.genes = new Array();
-	this.mutationRate = 0.3;
-	this.crossOverRate = 0.8;
+	this.mutationRate = 0.1;
+	this.crossOverRate = 0.7;
 	this.generation = 0;
+	this.avgFitness = 0;
+	this.worstFitness = 10000000;
+	this.bstFitness = 0;
+	this.fittest = -1;
+	this.totalFitness = 0;
 	this.mutate = function(w) {
 		for(var i = 0; i < w.length; i++) {
 			if(random(0, 1) <= this.mutationRate) {
@@ -142,7 +147,7 @@ function GenePool() {
 			union(c2, p2)
 			return;
 		}
-		var cp = Math.floor(random(0.1, 0.9) * p1.length);
+		var cp = Math.floor(random(0, 1) * (p1.length - 1));
 		for(var i = 0; i < cp; i++) {
 			c1.push(p1[i]);
 			c2.push(p2[i]);
@@ -152,7 +157,6 @@ function GenePool() {
 			c2.push(p1[i]);
 		}
 	}
-
 	this.epoch = function(elite) {
 		var old = this.genes.splice(0);
 		this.genes.length = 0;
@@ -184,5 +188,78 @@ function GenePool() {
 			this.genes.push(new gene(c2, 0));
 		}
 		this.generation++;
+	}
+
+	this.epoch2 = function() {
+		let old = this.genes.splice(0);
+		this.reset();
+		old.sort(function(a, b) {
+			if(a.fitness > b.fitness)
+				return 1;
+			else if(a.fitness < b.fitness)
+				return -1;
+			return 0;
+		});
+
+		for(let i = 0; i < old.length; i++) {
+			console.log(old[i].fitness);
+		}
+	}
+	this.averageFitness = function() {
+		return this.totalFitness / this.genes.length;
+	}
+	this.bestFitness = function() {
+		return this.bstFitness;
+	}
+
+	this.getRoulette = function() {
+		let slice = Disque.random(0, 1) * this.totalFitness;
+		let fsf = 0;
+		let cone = 0;
+		for(let i = 0; i < this.genes.length; i++) {
+			fsf += this.genes[i].fitness;
+			if(fsf >= slice) {
+				cone = this.genes[i];
+				break;
+			}
+		}
+		return cone;
+	}
+
+	this.grab = function(n, nc, pop) {
+		for(let i = n; n > 0; i--) {
+			for(let j = 0; j < nc; j++) {
+				pop.push(this.genes[(this.genes.length - 1) - i]);
+			}
+		}
+	}
+
+	this.calc = function() {
+		this.totalFitness = 0;
+		let hsf = 0, lsf = 999999;
+
+		for(let i = 0; i < this.genes.length; i++) {
+			if(this.genes[i].fitness > hsf) {
+				hsf = this.genes[i].fitness;
+				this.fittest = i;
+				this.bestFitness = hsf;
+			}
+
+			if(this.genes[i].fitness < lsf) {
+				lsf = this.genes[i].fitness;
+				this.worstFitness = wsf;
+			}
+
+			this.totalFitness += this.genes[i].fitness;
+		}
+
+		this.avgFitness = this.totalFitness / this.genes.length;
+	}
+
+	this.reset = function() {
+		this.totalFitness = 0;
+		this.bstFitness = 0;
+		this.worstFitness = 9999999;
+		this.avgFitness = 0;
 	}
 }

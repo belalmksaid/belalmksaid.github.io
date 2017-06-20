@@ -130,7 +130,7 @@ var Disque = {
 		return (Disque.lengthSqrd(a, b) < (r1 + r2) * (r1 + r2));
 	},
 	clamp: function(a,b,c) {
-		return Math.max(b,Math.min(c,a)) 
+		return Math.max(b,Math.min(c,a));
 	},
 	epsilon: 1
 };

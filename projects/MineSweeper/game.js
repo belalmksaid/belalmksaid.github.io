@@ -73,7 +73,7 @@ class sweeper {
         this.input[3] = Math.cos(this.orientation);
         this.output = this.brain.update(this.input);
         this.speed = this.output[0] + this.output[1];
-        this.orientation += Math.clamp(this.output[0] - this.output[1], -0.3, 0.3);
+        this.orientation += Disque.clamp(this.output[0] - this.output[1], -0.3, 0.3);
 
         if(this.position.x < 0) {
             this.position.x = sandbox.width - 1;

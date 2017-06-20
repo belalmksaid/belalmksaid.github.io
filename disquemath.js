@@ -129,7 +129,8 @@ var Disque = {
 	intersect: function(a, b, r1, r2) {
 		return (Disque.lengthSqrd(a, b) < (r1 + r2) * (r1 + r2));
 	},
+	clamp: function(a,b,c) {
+		return Math.max(b,Math.min(c,a)) 
+	},
 	epsilon: 1
 };
-
-(function(){Math.clamp=function(a,b,c){return Math.max(b,Math.min(c,a));}})();

@@ -24,10 +24,10 @@
             black = new color(0, 0, 0);
             var universe  = new world();
             $( window ).on('load', function() {
-                for(let i = 0; i < 50; i++) {
+                for(let i = 0; i < 100; i++) {
                     universe.pellets.push(new pellet(v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.height)), 2.5, black));
                 }
-                for(let i = 0; i < 20; i++) {
+                for(let i = 0; i < 50; i++) {
                     universe.sweepers.push(new sweeper(v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.height)), Disque.random(0, 2 * Math.PI), 0, 8));
                     universe.genepool.genes.push(new gene(universe.sweepers[i].brain.getWeights(), 0));
                 }

@@ -51,7 +51,7 @@ class sweeper {
         this.position = pos;
         this.orientation = or;
         this.speed = spd;
-        this.brain = new NeuralNetwork(2, 2);
+        this.brain = new NeuralNetwork(4, 2);
         this.brain.create();
         this.input = new Array();
         this.output = new Array();
@@ -67,12 +67,13 @@ class sweeper {
     update(x, y) {
         this.position.x += this.speed * Math.cos(this.orientation);
         this.position.y += this.speed * Math.sin(this.orientation);
-
         this.input[0] = x;
         this.input[1] = y;
+        this.input[1] = -Math.sin(this.orientation);
+        this.input[3] = Math.cos(this.orientation);
         this.output = this.brain.update(this.input);
         this.speed = this.output[0] + this.output[1];
-        this.orientation += (this.output[0] - this.output[1]);
+        this.orientation += Math.clamp(this.output[0] - this.output[1], -0.3, 0.3);
 
         if(this.position.x < 0) {
             this.position.x = sandbox.width - 1;

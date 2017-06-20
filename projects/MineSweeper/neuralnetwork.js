@@ -226,6 +226,7 @@ function GenePool() {
 			temp.push(new gene(b2, 0));
 		}
 		this.genes = temp;
+		this.generation++;
 	}
 	this.averageFitness = function() {
 		return this.totalFitness / this.genes.length;

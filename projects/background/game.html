@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <script src="/jquery.js"></script>
+        <script src="/disquemath.js"></script>
+        <script src="neuralnetwork.js"></script>
+        <script src="game.js"></script> 
+        <style>
+            html * {
+	            margin: 0px; 
+	            padding: 0px;
+	            font-family: 'Open Sans', sans-serif;
+	            font-weight: 100;
+            }
+            #sandbox {
+                width: 100%;
+                min-width: 800px;
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="sandbox"></canvas>
+        <script>
+            C = sandbox.getContext('2d');
+            black = new color(0, 0, 0);
+            var universe  = new world();
+            $( window ).on('load', function() {
+                $.get("brains.txt", function(data) {
+                    var dp = data.split(/\n/);
+                    for(let i = 0; i < dp.length; i++) {
+                        let dt = dp[i].split(",");
+                        var g = new Array();
+                        for(let j = 0; j < dt.length; j++) {
+                            g.push(parseFloat(dt[j]));
+                        }
+                        universe.genepool.genes.push(new gene(g, 0));
+                    }
+                    for(let i = 0; i < 100; i++) {
+                        universe.pellets.push(new pellet(v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.width)), 2.5, black));
+                    }
+                    for(let i = 0; i < 50; i++) {
+                        universe.sweepers.push(new sweeper(v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.width)), Disque.random(0, 2 * Math.PI), 0, 8));
+                        universe.sweepers[i].brain.putWeights(universe.genepool.genes[i].weights);
+                        //universe.genepool.genes.push(new gene(universe.sweepers[i].brain.getWeights(), 0));
+                    }
+                });
+            });
+            
+            function loop() {
+                C.clearRect(0, 0, sandbox.width, sandbox.width);
+                universe.draw(C);
+                window.requestAnimationFrame(loop);
+            }
+            window.requestAnimationFrame(loop);
+
+            window.setInterval(function() {
+                universe.evolve();
+            }, 60000);
+
+        </script>
+    </body>
+</html>

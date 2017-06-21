@@ -10,7 +10,7 @@ class world {
         this.pellets = new Array();
         this.sweepers = new Array();
         this.genepool = new GenePool();
-        this.debug = false;
+        this.debug = true;
     }
 
     evolve() {

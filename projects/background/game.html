@@ -39,8 +39,7 @@
                         universe.pellets.push(new pellet(v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.width)), 2.5, black));
                     }
                     for(let i = 0; i < 50; i++) {
-                        universe.sweepers.push(new sweeper(v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.width)), Disque.random(0, 2 * Math.PI), 0, 8));
-                        universe.sweepers[i].brain.putWeights(universe.genepool.genes[i].weights);
+                        universe.sweepers.push(new sweeper(v(Disque.random(0, sandbox.width), Disque.random(0, sandbox.width)), Disque.random(0, 2 * Math.PI), 0, 8, universe.genepool.genes[i].weights));
                         //universe.genepool.genes.push(new gene(universe.sweepers[i].brain.getWeights(), 0));
                     }
                 });

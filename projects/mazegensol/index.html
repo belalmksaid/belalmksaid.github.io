@@ -1,10 +1,76 @@
 <html>
     <head>
-
+        <script src="map.js"></script>
+        <style>
+            body {
+                margin: 10px;
+                font-family: Garamond;
+            }
+            .sep {
+                position: absolute;
+                top: 35px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+                overflow-y: scroll;
+                overflow-x: scroll;
+            }
+        </style>
     </head>
-    <script src="disquemath.js"/>
     <body>
-        <div></div>
-        <div></div>
+        <div style="height: 35px">
+            <i>p</i>: <input type="text" id="pinput" value="0.2"/>
+            <b>dim</b>: <input type="text" id="diminput" value="20"/>
+            <select name="Solver" id="selector">
+                <option value="DFS">DFS</option>
+                <option value="BFS">BFS</option>
+                <option value="Astarec">A* Euclidean</option>
+                <option value="Astarman">A* Manhattan</option>
+                <option value="all">All</option>
+            </select>
+            <button onclick="generateMap()">Create</button>
+            <button onclick="clearMaps()">Clear All</button>
+        </div>
+        <div class="sep" id="sandbox">
+        </div>
+        <script>
+            var maps = new Array();
+            function generateMap() {
+                let k = setInterval(function() {
+                    let m = new map(sandbox, parseFloat(pinput.value), parseInt(diminput.value));
+                    m.generate();
+                    m.draw();
+                    m.text();
+                    if(selector.value == "DFS") {
+                        let sol = solveDFS(m);
+                        m.drawSolution(sol);
+                        m.textSolution(sol);
+                    }
+                    else if(selector.value == "BFS") {
+                        let sol = solveBFS(m);
+                        m.drawSolution(sol);
+                        m.textSolution(sol);
+                    }
+                    else if(selector.value == "Astarec") {
+                        let sol = Astar(m, euclideanHeuristic);
+                        m.drawSolution(sol);
+                        m.textSolution(sol);
+                    }
+                    else if(selector.value == "Astarman") {
+                        let sol = Astar(m, manhattanHeuristic);
+                        m.drawSolution(sol);
+                        m.textSolution(sol);
+                    }
+                   
+                    maps.push(m);
+                    clearInterval(k);
+                }, 1);
+                
+            }
+            function clearMaps() {
+                maps = new Array();
+                sandbox.innerHTML = "";
+            }
+        </script>
     </body>
 </html>

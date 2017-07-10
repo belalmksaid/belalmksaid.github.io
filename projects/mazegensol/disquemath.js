@@ -90,6 +90,7 @@ function rectangleB(c, x, y, w, h) {
 	c.stroke();
 }
 
+
 function drawPolyB(c, x, y, pnts, orie) {
 	c.save();
 	c.translate(x, y);

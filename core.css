@@ -127,3 +127,7 @@ a:hover {
 .projectdisplay {
 	text-align: center;
 }
+
+.projectPoster > h3 {
+	text-align: left;
+}

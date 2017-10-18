@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <script src="http://belalsaid.com/jquery.js"></script>
+        <script src="http://belalsaid.com/disquemath.js"></script>
+        <script src="neuralnetwork.js"></script>
+        <script src="syncgame.js"></script> 
+        <style>
+            html * {
+	            margin: 0px; 
+	            padding: 0px;
+	            font-family: 'Open Sans', sans-serif;
+	            font-weight: 100;
+            }
+            #sandbox {
+                width: 100%;
+                min-width: 800px;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="sandbox" width="1000" height="1000"></canvas>
+        <script>
+            C = sandbox.getContext('2d');
+            black = new color(0, 0, 0);
+            var universe  = new world();
+            $(window).on('load', function() {
+                
+            });
+            
+            function loop() {
+                C.clearRect(0, 0, sandbox.width, sandbox.height);
+                window.requestAnimationFrame(loop);
+            }
+            window.requestAnimationFrame(loop);
+
+        </script>
+    </body>
+</html>

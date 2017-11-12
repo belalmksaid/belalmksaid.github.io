@@ -77,6 +77,9 @@
             sandbox.addEventListener('mousemove', function (evt) {
                 board.mousePos = getMousePos(sandbox, evt);
             }, false);
+            sandbox.addEventListener('touchmove', function (evt) {
+                board.mousePos = getMousePos(sandbox, evt);
+            }, false);
             setInterval(function () {
                 board.update();
                 board.draw();

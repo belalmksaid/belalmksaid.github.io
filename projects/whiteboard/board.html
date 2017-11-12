@@ -1,0 +1,39 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" ></script>
+    <style>
+        body {
+            margin: 0px;
+        }
+
+        #cont {
+            height: 100%;
+            width: 100%;
+        }
+        #toolbar {
+            height: 100px;
+            width: 100%;
+            position: absolute;
+            margin-bottom: 0px;
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cont">
+    <canvas id="sandbox"></canvas>
+    <div id="toolbar"></div>
+    <script>
+        $(window).on('resize load', function () {
+            // if (sandbox.offsetWidth > sandbox.width) {
+                sandbox.width = cont.offsetWidth;
+                sandbox.height = cont.offsetHeight - 100;
+            // }
+        });
+    </script>
+    </div>
+</body>
+
+</html>

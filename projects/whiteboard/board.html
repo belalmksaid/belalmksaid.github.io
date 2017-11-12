@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <style>
         body {
             margin: 0px;
@@ -11,28 +11,61 @@
             height: 100%;
             width: 100%;
         }
+
         #toolbar {
             height: 100px;
             width: 100%;
             position: absolute;
             margin-bottom: 0px;
-            background-color: red;
+            text-align: center;
+        }
+
+        #toolbar>div {
+            height: calc(100% - 10px);
+            margin-left: 10px;
+            margin-right: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #toolbar>div>div {
+            background-color: #9e9eff;
+            height: 80px;
+            width: 80px;
+            vertical-align: top;
+            display: inline-block;
+            *display: inline;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 80px;
+            cursor: pointer;
+        }
+
+        #toolbar>div>div:hover {
+            font-size: 20px;
         }
     </style>
 </head>
 
 <body>
     <div id="cont">
-    <canvas id="sandbox"></canvas>
-    <div id="toolbar"></div>
-    <script>
-        $(window).on('resize load', function () {
-            // if (sandbox.offsetWidth > sandbox.width) {
+        <canvas id="sandbox"></canvas>
+        <div id="toolbar">
+            <div>
+                <div onclick="pick('pen')">Pen</div>
+                <div onclick="pick('eraser')">Eraser</div>
+                <div></div>
+            </div>
+        </div>
+        <script>
+            $(window).on('resize load', function () {
                 sandbox.width = cont.offsetWidth;
                 sandbox.height = cont.offsetHeight - 100;
-            // }
-        });
-    </script>
+            });
+
+            function pick(method) {
+            }
+        </script>
     </div>
 </body>
 

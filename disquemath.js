@@ -1,39 +1,45 @@
 function vector(x, y) {
 	this.x = x;
 	this.y = y;
-	this.add = function(b) {
+	this.add = function (b) {
 		this.x += b.x;
 		this.y += b.y;
 		return this;
 	}
-	this.scale = function(s) {
+	this.scale = function (s) {
 		this.x *= s;
 		this.y *= s;
 		return this;
 	}
-	this.sub = function(b) {
+	this.sub = function (b) {
 		this.x -= b.x;
 		this.y -= b.y;
 		return this;
 	}
-	this.clone = function() {
+	this.clone = function () {
 		return v(this.x, this.y);
 	}
-	this.length = function() {
+	this.length = function () {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
 	}
-	this.normalize = function() {
+	this.normalize = function () {
 		var l = Math.sqrt(this.x * this.x + this.y * this.y);
-		this.x = this.x/l;
-		this.y = this.y/l;
+		this.x = this.x / l;
+		this.y = this.y / l;
 		return this;
 	}
 }
 
-function color(r, g, b) {
-	this.r = r;
-	this.g = g;
-	this.b = b;
+class color {
+	constructor(r, g, b) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+	}
+
+	tostring() {
+		return 'rgb(' + this.r + ', ' + this.g + ', ' + this.b + ')';
+	}
 }
 
 function v(x, y) {
@@ -59,7 +65,7 @@ function ZERO() {
 function circleF(c, x, y, rad, col) {
 	c.beginPath();
 	c.arc(x, y, rad, 0, 2 * Math.PI, false);
-	c.fillStyle = "rgb(" + col.r +"," + col.g + "," + col.b + ")";
+	c.fillStyle = "rgb(" + col.r + "," + col.g + "," + col.b + ")";
 	c.fill();
 	c.closePath();
 }
@@ -74,7 +80,7 @@ function circleB(c, x, y, rad) {
 function circleFl(c, x, y, rad, orie, col) {
 	c.beginPath();
 	c.arc(x, y, rad, 0, 2 * Math.PI, false);
-	c.fillStyle = "rgb(" + col.r +"," + col.g + "," + col.b + ")";
+	c.fillStyle = "rgb(" + col.r + "," + col.g + "," + col.b + ")";
 	c.fill();
 	c.closePath();
 	c.beginPath();
@@ -97,7 +103,7 @@ function drawPolyB(c, x, y, pnts, orie) {
 	c.translate(-x, -y);
 	c.beginPath();
 	c.moveTo(pnts[0].x + x, pnts[0].y + y);
-	for(var i = 1; i < pnts.length; i++) {
+	for (var i = 1; i < pnts.length; i++) {
 		c.lineTo(pnts[i].x + x, pnts[i].y + y);
 	}
 	c.closePath();
@@ -106,31 +112,31 @@ function drawPolyB(c, x, y, pnts, orie) {
 }
 
 var Disque = {
-	random: function(min, max) {
+	random: function (min, max) {
 		return (Math.random() * (max - min) + min);
 	},
-	sign: function(s) {
-		if(s > 0) return 1;
-		if(s < 0) return -1;
+	sign: function (s) {
+		if (s > 0) return 1;
+		if (s < 0) return -1;
 		return 0;
 	},
-	dot: function(a, b) {
+	dot: function (a, b) {
 		return a.x * b.x + a.y * b.y;
 	},
-	randomV: function(xmn, xmx, ymn, ymx) {
+	randomV: function (xmn, xmx, ymn, ymx) {
 		return v(Disque.random(xmn, xmx), Disque.random(ymn, ymx));
 	},
-	distance: function(a, b) {
+	distance: function (a, b) {
 		return Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 	},
-	lengthSqrd: function(a, b) {
+	lengthSqrd: function (a, b) {
 		return ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 	},
-	intersect: function(a, b, r1, r2) {
+	intersect: function (a, b, r1, r2) {
 		return (Disque.lengthSqrd(a, b) < (r1 + r2) * (r1 + r2));
 	},
-	clamp: function(a,b,c) {
-		return Math.max(b,Math.min(c,a));
+	clamp: function (a, b, c) {
+		return Math.max(b, Math.min(c, a));
 	},
 	epsilon: 1
 };

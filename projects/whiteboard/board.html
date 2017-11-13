@@ -60,6 +60,8 @@
             </div>
         </div>
         <script>
+            document.addEventListener('touchstart', touchstartHandler, {passive: false});
+            document.addEventListener('touchmove', touchmoveHandler, {passive: false});
             $(window).on('resize load', function () {
                 sandbox.width = cont.offsetWidth;
                 sandbox.height = cont.offsetHeight - 100;

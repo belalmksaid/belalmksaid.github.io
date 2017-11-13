@@ -85,6 +85,7 @@
                 board.mouseup();
             }, false);
             sandbox.addEventListener('touchstart', function(evt) {
+                board.mousePos = getMousePos(sandbox, evt);
                 board.mousedown();
             }, false);
             sandbox.addEventListener('touchend', function(evt) {

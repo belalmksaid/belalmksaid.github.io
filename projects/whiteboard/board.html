@@ -84,10 +84,10 @@
             sandbox.addEventListener('mouseleave', function(evt) {
                 board.mouseup();
             }, false);
-            sandbox.addEventListener('touchdown', function(evt) {
+            sandbox.addEventListener('touchstart', function(evt) {
                 board.mousedown();
             }, false);
-            sandbox.addEventListener('touchup', function(evt) {
+            sandbox.addEventListener('touchend', function(evt) {
                 board.mouseup();
             }, false);
             sandbox.addEventListener('mousemove', function (evt) {

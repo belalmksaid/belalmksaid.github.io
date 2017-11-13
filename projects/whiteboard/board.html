@@ -56,7 +56,7 @@
             <div>
                 <div onclick="pick('pen')">Pen</div>
                 <div onclick="pick('eraser')">Eraser</div>
-                <div></div>
+                <div onclick="board.clear()">Clear</div>
             </div>
         </div>
         <script>
@@ -78,8 +78,17 @@
             sandbox.addEventListener('mousedown', function(evt) {
                 board.mousedown();
             }, false);
+            sandbox.addEventListener('mouseup', function(evt) {
+                board.mouseup();
+            }, false);
+            sandbox.addEventListener('mouseleave', function(evt) {
+                board.mouseup();
+            }, false);
             sandbox.addEventListener('touchdown', function(evt) {
                 board.mousedown();
+            }, false);
+            sandbox.addEventListener('touchup', function(evt) {
+                board.mouseup();
             }, false);
             sandbox.addEventListener('mousemove', function (evt) {
                 board.mousePos = getMousePos(sandbox, evt);
@@ -89,9 +98,9 @@
                 board.mousePos = getMousePos(sandbox, evt.touches[0]);
                 board.draw();
             }, false);
-            setInterval(function () {
-                board.update();
-            }, 1000 / 60);
+            // setInterval(function () {
+            //     board.update();
+            // }, 1000 / 60);
         </script>
     </div>
 </body>

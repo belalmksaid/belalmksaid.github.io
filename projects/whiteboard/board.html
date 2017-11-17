@@ -60,18 +60,15 @@
             </div>
         </div>
         <script>
-            
+
             function pdefault(e) {
                 e.preventDefault();
             }
 
-            document.addEventListener('touchmove', pdefault, {passive: false});
-            $(window).on('resize load', function () {
-                sandbox.width = cont.offsetWidth;
-                sandbox.height = cont.offsetHeight - 100;
-            });
+            document.addEventListener('touchmove', pdefault, { passive: false });
 
             function pick(method) {
+                console.log(method);
                 board.mode = method;
             }
 
@@ -82,20 +79,28 @@
 
             let board = new whiteboard(sandbox.getContext('2d'), sandbox);
 
-            sandbox.addEventListener('mousedown', function(evt) {
+            $(window).on('resize load', function () {
+                sandbox.width = cont.offsetWidth;
+                sandbox.height = cont.offsetHeight - 100;
+                $.get("http://api.belalsaid.com/whiteboard/all/", function (data) {
+                    board.init(data);
+                });
+            });
+
+            sandbox.addEventListener('mousedown', function (evt) {
                 board.mousedown();
             }, false);
-            sandbox.addEventListener('mouseup', function(evt) {
+            sandbox.addEventListener('mouseup', function (evt) {
                 board.mouseup();
             }, false);
-            sandbox.addEventListener('mouseleave', function(evt) {
+            sandbox.addEventListener('mouseleave', function (evt) {
                 board.mouseup();
             }, false);
-            sandbox.addEventListener('touchstart', function(evt) {
+            sandbox.addEventListener('touchstart', function (evt) {
                 board.mousePos = getMousePos(sandbox, evt);
                 board.mousedown();
             }, false);
-            sandbox.addEventListener('touchend', function(evt) {
+            sandbox.addEventListener('touchend', function (evt) {
                 board.mouseup();
             }, false);
             sandbox.addEventListener('mousemove', function (evt) {

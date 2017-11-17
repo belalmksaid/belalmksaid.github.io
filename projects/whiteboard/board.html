@@ -81,6 +81,7 @@
             }
 
             let board = new whiteboard(sandbox.getContext('2d'), sandbox);
+
             sandbox.addEventListener('mousedown', function(evt) {
                 board.mousedown();
             }, false);
@@ -105,9 +106,9 @@
                 board.mousePos = getMousePos(sandbox, evt.touches[0]);
                 board.draw();
             }, false);
-            // setInterval(function () {
-            //     board.update();
-            // }, 1000 / 60);
+            setInterval(function () {
+                board.update();
+            }, 1000 / 60);
         </script>
     </div>
 </body>

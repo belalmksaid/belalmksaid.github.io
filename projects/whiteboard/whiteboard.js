@@ -54,6 +54,7 @@ class whiteboard {
     update() {
         while(this.lock) {
         }
+        if(this.canvasLog.length <= 0) return;
         let clone = this.canvasLog.slice(0);
         $.ajax({
             url: 'http://api.belalsaid.com/whiteboard/', 

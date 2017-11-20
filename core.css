@@ -137,6 +137,10 @@ a:hover {
 	text-align: center;
 }
 
-.projectPoster > h3, .projectPoster > h5 {
+.projectPoster > h3 {
 	text-align: left;
+}
+
+.projectPoster > h5 {
+	text-align: right;
 }

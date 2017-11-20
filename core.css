@@ -99,6 +99,12 @@ a:hover {
 	padding-top: 20px;
 }
 
+#realbody > iframe {
+	width: 80%;
+	height: 100%;
+	border-width: 0px;
+}
+
 .srcicon {
 	width: 25px;
 }

@@ -4,8 +4,8 @@ function loadBlogs(cont) {
         articles = articles.articles;
         cont.innerHTML = "";
         for (let i = 0; i < articles.length; i++) {
-            let ele = '<div class="projectPoster"><h1><a href="blog.html?id=[id]">[title]</a></h1><h3>[desc]</h3><h4></h4></div>';
-            ele = ele.replace("[id]", i.toString()).replace("[title]", articles[i].title).replace("[desc]", articles[i].description);
+            let ele = '<div class="projectPoster"><h1><a href="blog.html?id=[id]">[title]</a></h1><h3>[desc]</h3><br/><h4>[date]</h4></div>';
+            ele = ele.replace("[id]", i.toString()).replace("[title]", articles[i].title).replace("[desc]", articles[i].description).replace("[date]", articles[i].date);
             cont.innerHTML += ele;
         }
     });

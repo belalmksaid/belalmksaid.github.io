@@ -13,6 +13,6 @@ function loadBlogs(cont) {
     });
 }
 
-$(document).on('load', function(e) {
+$(window).on('load', function(e) {
     loadBlogs(posters);
 });

@@ -4,7 +4,7 @@ $( window ).on('resize load', function() {
 	background.width = background.offsetWidth;
 	background.height = background.offsetHeight;
 	$(realbody).css('height', (window.innerHeight - ($('#navbar').length > 0 ? 33 : 0)) + 'px');
-	if(center != 0) {
+	if(center != 0 && profile) {
 		center.position.x = profile.getBoundingClientRect().left + 80;
 		center.position.y = profile.getBoundingClientRect().top + 80;
 	}
@@ -82,9 +82,12 @@ function createStars() {
 	}
 	center = new star();
 	center.radius = 80;
-	center.position.x = profile.getBoundingClientRect().left + 80;
-	center.position.y = profile.getBoundingClientRect().top + 80;
-	center.op = 1;
+	if(profile) {
+		center.position.x = profile.getBoundingClientRect().left + 80;
+		center.position.y = profile.getBoundingClientRect().top + 80;
+		center.op = 1;
+
+	}
 }
 
 function createMoreStars() {

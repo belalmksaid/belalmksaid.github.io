@@ -35,11 +35,9 @@
     </div>
     <script>
         let id = getParam("id");
-        if(id != null || id != '') {
-            console.log("not null");
+        if(id != null && id != '') {
         }
         else {
-            console.log("null");
             loadBlogs(posters);
         }
     </script>

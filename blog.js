@@ -4,6 +4,7 @@ function loadBlogs(cont) {
         console.log(data);
         let articles = JSON.parse(data);
         articles = articles.articles;
+        console.log(articles);
         cont.innerHTML = "";
         for(let i = 0; i < articles.length; i++) {
             let ele = '<div class="projectPoster"><h1><a href="[url]" target="_blank">[title]</a></h1><h3>[desc]</h3></div>';

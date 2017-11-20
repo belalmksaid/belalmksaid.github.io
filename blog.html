@@ -34,7 +34,13 @@
         </div>
     </div>
     <script>
-        loadBlogs(posters);
+        let id = getParam("id");
+        if(id != null || id != '') {
+            
+        }
+        else {
+            loadBlogs(posters);
+        }
     </script>
     </body>
     </html>

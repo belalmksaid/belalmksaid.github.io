@@ -2,12 +2,10 @@ function loadBlogs(cont) {
     let url = "articles/feed.json";
     $.get(url, function(articles) {
         articles = articles.articles;
-        console.log(articles);
         cont.innerHTML = "";
         for(let i = 0; i < articles.length; i++) {
-            let ele = '<div class="projectPoster"><h1><a href="articles/[url]" target="_blank">[title]</a></h1><h3>[desc]</h3></div>';
-            ele = ele.replace("[url]", articles[i].uri).replace("[title]", articles[i].title).replace("[desc]", articles[i].description);
-            console.log(ele);
+            let ele = '<div class="projectPoster"><h1><a href="blog.html?id=[id]" target="_blank">[title]</a></h1><h3>[desc]</h3></div>';
+            ele = ele.replace("[id]", i.toString()).replace("[title]", articles[i].title).replace("[desc]", articles[i].description);
             cont.innerHTML += ele;
         }
     });

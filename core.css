@@ -105,6 +105,7 @@ a:hover {
 	border-width: 0px;
 	margin-left: auto;
 	margin-right: auto;
+	display: block;
 }
 
 .srcicon {

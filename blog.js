@@ -1,6 +1,7 @@
 function loadBlogs(cont) {
     let url = "articles/feed.json";
     $.get(url, function(data) {
+        console.log(data);
         let articles = JSON.parse(data);
         articles = articles.articles;
         cont.innerHTML = "";

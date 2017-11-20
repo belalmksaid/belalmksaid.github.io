@@ -12,6 +12,6 @@ function loadBlogs(cont) {
     });
 }
 
-$(document).load(function() {
+$(document).on('load', function(e) {
     loadBlogs(posters);
 });

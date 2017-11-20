@@ -1,6 +1,12 @@
 {
     "articles" : [
         {
+            "uri" : "music_box/musicbox.html",
+            "title" : "Scrap Music Box",
+            "date" : "04/15/2014",
+            "description" : "I built a music box from scrap wood and rubberbands, inspired by the inventor <a href='https://www.google.com/patents/US4458573'>Akihiko Isaka's governor</a>. The rubber bands are attached to a governor that controls that speed of the music box using air resistance. The cylinder was built by cutting mahogany using a circular saw and gluing them to form a 3&#34; long cylinder. The notes are built from a rake's teeth that I cut off and filed down to their specific notes."
+        },
+        {
             "uri" : "Testing_for_Bipartiteness/Testing_for_Bipartiteness.html",
             "title" : "Testing for Bipartiteness",
             "date" : "11/19/2017",

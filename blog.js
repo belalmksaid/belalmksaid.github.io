@@ -13,8 +13,3 @@ function loadBlogs(cont) {
         }
     });
 }
-
-$(window).on('load', function(e) {
-    console.log("Loaded");
-    loadBlogs(posters);
-});

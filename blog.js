@@ -1,4 +1,5 @@
 function loadBlogs(cont) {
+    console.log(cont);
     let url = "articles/feed.json";
     $.get(url, function(data) {
         console.log(data);
@@ -14,5 +15,6 @@ function loadBlogs(cont) {
 }
 
 $(window).on('load', function(e) {
+    console.log("Loaded");
     loadBlogs(posters);
 });

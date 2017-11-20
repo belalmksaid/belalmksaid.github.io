@@ -4,7 +4,7 @@ function loadBlogs(cont) {
         articles = articles.articles;
         cont.innerHTML = "";
         for (let i = 0; i < articles.length; i++) {
-            let ele = '<div class="projectPoster"><h1><a href="blog.html?id=[id]" target="_blank">[title]</a></h1><h3>[desc]</h3></div>';
+            let ele = '<div class="projectPoster"><h1><a href="blog.html?id=[id]">[title]</a></h1><h3>[desc]</h3></div>';
             ele = ele.replace("[id]", i.toString()).replace("[title]", articles[i].title).replace("[desc]", articles[i].description);
             cont.innerHTML += ele;
         }
@@ -18,7 +18,7 @@ function loadBlogsFromId(cont, id) {
         articles = articles.articles;
         cont.innerHTML = "";
         let ele = '<iframe src="articles/[url]"></iframe>';
-        ele = ele.replace("[url]", articles[i].uri);
+        ele = ele.replace("[url]", articles[id].uri);
         cont.innerHTML += ele;
     });
 }

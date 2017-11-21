@@ -11,6 +11,12 @@
             "title" : "Testing for Bipartiteness",
             "date" : "11/19/2017",
             "description" : "Let’s say you’re an orientation leader at Rutgers University; you take your job very seriously and know that the some of students know each other. You want to split the students into two groups for ice breakers such that none of the people in the two groups know each other..."
+        },
+        {
+            "uri" : "ranking/ranking.html",
+            "title" : "Company Ranking",
+            "date" : "11/20/2017",
+            "description" : "Companies ranked according to prestige, pay, difficulty of getting in, and how I feel about them."
         }
     ]
 }

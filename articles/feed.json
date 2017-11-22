@@ -14,9 +14,9 @@
         },
         {
             "uri" : "ranking/ranking.html",
-            "title" : "Company Ranking",
+            "title" : "Where should I apply?",
             "date" : "11/20/2017",
-            "description" : "Companies ranked according to prestige, pay, difficulty of getting in, and how I feel about them (in no particular order). This is supposed to be a resource for anyone looking for places to apply."
+            "description" : "List of companies that are constantly hiring interns and full time. Inspired by r/cscareerquestions. This is meant to be a resource for college students who usually don't know where to apply."
         }
     ]
 }

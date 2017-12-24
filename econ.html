@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <script src="jquery.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js"></script>
+        <link rel="stylesheet" src="htpp://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css" />
+        <style>
+            #content > div > h2 {
+                text-align: center;
+            }
+            #content > div {
+                
+                padding-left: 8%;
+                padding-right: 8%;
+            }
+            #content > div > div {
+                width: 80%;
+                height: 300px;
+                margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="content"></div>
+        <script>
+        const url = "http://ec2-18-216-37-108.us-east-2.compute.amazonaws.com:8000/"
+        const csv_id = "?format=csv";
+        const json_id = "?format=json"
+        const symbols_url = url + "symbols" + json_id;
+        const $content = $("#content");
+        let plots = new Array();
+
+        $.get(symbols_url, function(data) {
+            let symbols = JSON.parse(data).symbols;
+            for(let i = 0; i < symbols.length; i++) {
+                let dcont =  document.createElement('div');
+                let h = document.createElement("h2");
+                h.innerHTML = symbols[i].name;
+                let dplot = document.createElement('div');
+                dcont.appendChild(h);
+                dcont.appendChild(dplot);
+                $content.append(dcont);
+                plot(symbols[i], dplot);
+            }
+        });
+
+        function plot(sym, div) {
+            let symbol = sym.symbol;
+            let t_url = url + symbol.replace(".", "") + csv_id;
+            console.log(t_url);
+            let g = new Dygraph(div, t_url, {
+                
+            });
+            plots.push(g);
+        }
+        </script>
+    </body>
+</html>

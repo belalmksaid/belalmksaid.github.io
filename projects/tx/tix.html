@@ -1,0 +1,104 @@
+<html>
+    <head>
+        <style>
+        @font-face { font-family: Roboto; src: url('Roboto-Bold.ttf'); } 
+        * {
+            font-family: Roboto;
+        }
+        body {
+            padding: 10px;
+        }
+        #container {
+            height: 100%;
+            width: 100%;
+        }
+        .bigwrite {
+            text-align: center;
+            font-size: 82px;
+            line-height: 1.0;
+            padding: 0px;
+            margin: 20px;
+        }
+        .offwrite {
+            text-align: left;
+            font-size: 36px;
+            line-height: 1.0;
+            margin: 0px;
+        }
+        #destination {
+            background: linear-gradient(pink, white, pink);
+            border-radius: 25px;
+
+            padding: 1px 30px 120px 30px;
+        }
+        #ticketCount {
+            border-radius: 12px;
+            border-color: black;
+            border-width: 2px;
+            border-style: solid;
+            margin-top: 20px;
+            width: 47%;
+            padding-left: 20px;
+            padding-bottom: 180px;
+        }
+        .countwritebig {
+            text-align: left;
+            font-size: 68px;
+            line-height: 1.0;
+            padding: 0px;
+            margin: 20px;
+        }
+        #ticketinfo {
+            float: none;
+            height: 700px;
+        }
+        #ticketinfo > div {
+            float: left;
+        }
+        #qrcode {
+            height: 387px;
+            text-align: center;
+            padding-top: 35px;
+            padding-left: 80px;
+        }
+        #datetime {
+            text-align: center;
+            font-size: 66px;
+            color: rgb(50,50,50);
+        }
+        </style>
+        <script src="qrcode.js"></script>
+    </head>
+    <body>
+        <div id="container">
+            <div id="destination">
+                <p class="bigwrite" style="margin-bottom: 0px">NW BRUN</p>
+                <p class="offwrite">SEC</p>
+                <p class="bigwrite" style="margin-top: 0px">to</p>
+                <p class="bigwrite">NYP NYP</p>
+            </div>
+            <div id="ticketinfo">
+                <div id="ticketCount">
+                    <p class="countwritebig" style="font-size: 50px">One Way</p>
+                    <p class="countwritebig">1 Adult</p>
+                </div>
+                <div id="qrcode">
+
+                </div>
+            </div>
+            <div id="datetime">
+                Sat, Feb 15 01:33:51 PM
+            </div>
+        </div>
+        <script>
+            new QRCode(document.getElementById("qrcode"), {
+                text: "http://jindo.dev.naver.com/collie",
+                width: 320,
+                height: 320,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        </script>
+    </body>
+</html>

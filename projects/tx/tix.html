@@ -66,6 +66,27 @@
             font-size: 66px;
             color: rgb(50,50,50);
         }
+        #bottombar > div {
+            float: left;
+        }
+        #bottombar {
+            padding-left: 30px;
+        }
+        #back {
+            font-size: 38px;
+            border: solid;
+            padding: 20px 40px 20px 40px;
+            text-align: center;
+            border-radius: 15px;
+            border-color: gray;
+            color: rgb(50, 79, 133);
+            margin-right: 25px;
+        }
+        #timeleft {
+            font-size: 48px;
+            color: rgb(50,50,50);
+            padding: 10px;
+        }
         </style>
         <script src="qrcode.js"></script>
     </head>
@@ -89,6 +110,13 @@
             <div id="datetime">
                 Sat, Feb 15 01:33:51 PM
             </div>
+            <div id="bars">
+
+            </div>
+            <div id="bottombar">
+                <div id="back">Back</div>
+                <p id="timeleft">Expires in : 00:02:24:21</p>
+            </dic>
         </div>
         <script>
             new QRCode(document.getElementById("qrcode"), {
@@ -99,6 +127,23 @@
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H
             });
+            var date = new Date();
+            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            var days = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+            setInterval(function() {
+                let year = date.getFullYear();
+                let hour = date.getHours();
+                if(hour >= 12) hour = hour - 12;
+                if(hour < 10) hour = "0" + hour;
+                let minute = date.getMinutes();
+                if(minute < 10) minute = "0" + minute;
+                let second = date.getSeconds();
+                if(second < 10) second = "0" + second;
+                let month = months[date.getMonth()];
+                let m = date.getHours() >= 12 ? "PM" : "AM";
+                datetime.innerHTML = days[date.getDay()] + ", " + month + " " + date.getDate() + " " + hour + ":" + minute + ":" + second + " " + m;
+                
+            }, 17);
         </script>
     </body>
 </html>

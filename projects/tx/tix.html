@@ -172,7 +172,7 @@
                 if(parseFloat(bars.style.opacity) <= 0.0 || parseFloat(bars.style.opacity) >= 1.0) {
                     direction = -direction;
                 }
-                bars.style.opacity = (parseFloat(bars.style.opacity) + direction);
+                
                 secv -= 17/1000;
                 if(secv <= 0) {
                     secv = 59;
@@ -181,6 +181,12 @@
                 if(s < 10) s = "0" + s;
                 sec.innerHTML = s;
             }, 17);
+            setInterval(function(){
+                if(bars.style.opacity == "0.0")
+                    bars.style.opacity = "1.0";
+                else
+                    bars.style.opacity = "0.0";
+            }, 500);
         </script>
     </body>
 </html>

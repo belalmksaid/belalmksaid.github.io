@@ -131,6 +131,7 @@
             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             var days = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
             setInterval(function() {
+                date = new Date();
                 let year = date.getFullYear();
                 let hour = date.getHours();
                 if(hour >= 12) hour = hour - 12;
@@ -142,7 +143,6 @@
                 let month = months[date.getMonth()];
                 let m = date.getHours() >= 12 ? "PM" : "AM";
                 datetime.innerHTML = days[date.getDay()] + ", " + month + " " + date.getDate() + " " + hour + ":" + minute + ":" + second + " " + m;
-                
             }, 17);
         </script>
     </body>

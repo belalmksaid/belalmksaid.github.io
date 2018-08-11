@@ -87,6 +87,27 @@
             color: rgb(50,50,50);
             padding: 10px;
         }
+        #bars {
+            height: 52px;
+            padding-top: 80px;
+            opacity: 1.0;
+        }
+        #bars > div {
+            float: left;
+            height: 100%;
+        }
+        #bar1 {
+            background-color: rgb(209, 108, 165);
+            width: 35%;
+        }
+        #bar2 {
+            background-color: rgb(70, 184, 134);
+            width: 35%;
+        }
+        #bar3 {
+            background-color: rgb(141, 228, 142);
+            width: 30%;
+        }
         </style>
         <script src="qrcode.js"></script>
     </head>
@@ -110,12 +131,14 @@
             <div id="datetime">
                 Sat, Feb 15 01:33:51 PM
             </div>
-            <div id="bars">
-
+            <div id="bars" style="opacity: 1.0">
+                <div id="bar1"></div>
+                <div id="bar2"></div>
+                <div id="bar3"></div>
             </div>
             <div id="bottombar">
                 <div id="back">Back</div>
-                <p id="timeleft">Expires in : 00:02:24:21</p>
+                <p id="timeleft">Expires in : 00:02:24:<span id="sec">59</span></p>
             </dic>
         </div>
         <script>
@@ -130,6 +153,8 @@
             var date = new Date();
             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             var days = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+            let direction = 0.01;
+            let secv = 59.0;
             setInterval(function() {
                 date = new Date();
                 let year = date.getFullYear();
@@ -143,6 +168,17 @@
                 let month = months[date.getMonth()];
                 let m = date.getHours() >= 12 ? "PM" : "AM";
                 datetime.innerHTML = days[date.getDay()] + ", " + month + " " + date.getDate() + " " + hour + ":" + minute + ":" + second + " " + m;
+                if(parseFloat(bars.style.opacity) <= 0.0 || parseFloat(bars.style.opacity) >= 1.0) {
+                    direction = -direction;
+                }
+                bars.style.opacity = (parseFloat(bars.style.opacity) + direction);
+                secv -= 17/1000;
+                if(secv <= 0) {
+                    secv = 59;
+                }
+                let s = Math.floor(secv);
+                if(s < 10) s = "0" + s;
+                sec.innerHTML = s;
             }, 17);
         </script>
     </body>

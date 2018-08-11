@@ -181,11 +181,13 @@
                 if(s < 10) s = "0" + s;
                 sec.innerHTML = s;
             }, 17);
+            let yes = false;
             setInterval(function(){
-                if(bars.style.opacity == "0.0")
+                if(yes)
                     bars.style.opacity = "1.0";
                 else
                     bars.style.opacity = "0.0";
+                yes = !yes;
             }, 500);
         </script>
     </body>

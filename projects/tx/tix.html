@@ -24,11 +24,12 @@
             font-size: 36px;
             line-height: 1.0;
             margin: 0px;
+            opacity: 0;
         }
         #destination {
             background: linear-gradient(#858585, white,#858585);
             border-radius: 25px;
-            padding: 1px 30px 215px 30px;
+            padding: 1px 30px 100px 30px;
         }
         #ticketCount {
             border-radius: 12px;
@@ -38,7 +39,7 @@
             margin-top: 20px;
             width: 47%;
             padding-left: 20px;
-            padding-bottom: 180px;
+            padding-bottom: 260px;
         }
         .countwritebig {
             text-align: left;
@@ -55,10 +56,10 @@
             float: left;
         }
         #qrcode {
-            height: 387px;
+            height: 450px;
             text-align: center;
-            padding-top: 35px;
-            padding-left: 80px;
+            padding-top: 40px;
+            padding-left: 40px;
         }
         #datetime {
             text-align: center;
@@ -117,12 +118,12 @@
                 <p class="bigwrite" style="margin-bottom: 0px">NYP NYP</p>
                 <p class="offwrite">SEC</p>
                 <p class="bigwrite" style="margin-top: 0px">to</p>
-                <p class="bigwrite">NW BRUN</p>
+                <p class="bigwrite">CHATHAM</p>
             </div>
             <div id="ticketinfo">
                 <div id="ticketCount">
                     <p class="countwritebig" style="font-size: 50px">One Way</p>
-                    <p class="countwritebig"><span id="pc">3</span> Adult</p>
+                    <p class="countwritebig"><span id="pc">1</span> Adult</p>
                 </div>
                 <div id="qrcode">
 
@@ -143,9 +144,9 @@
         </div>
         <script>
             new QRCode(document.getElementById("qrcode"), {
-                text: "http://jindo.dev.naver.com/collie",
-                width: 320,
-                height: 320,
+                text: "http://jindo.dev.naveffffffffffffffffffr.com/collie",
+                width: 370,
+                height: 370,
                 colorDark : "#000000",
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H

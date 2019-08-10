@@ -118,7 +118,7 @@
                 <p class="bigwrite" style="margin-bottom: 0px">NYP NYP</p>
                 <p class="offwrite">SEC</p>
                 <p class="bigwrite" style="margin-top: 0px">to</p>
-                <p class="bigwrite">NW BRUN</p>
+                <p id="dest" class="bigwrite">NW BRUN</p>
             </div>
             <div id="ticketinfo">
                 <div id="ticketCount">
@@ -193,6 +193,9 @@
             if(urlParams.has("col")) {
                 let c = urlParams.get("col");
                 destination.setAttribute("style", "background: linear-gradient(" + c + ", white, " + c + ");");
+            }
+            if(urlParams.has("dest")) {
+                dest.innerHTML = urlParams.get("dest");
             }
             window.scrollTo(0, 1);
         </script>
